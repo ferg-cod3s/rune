@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rune Logo Concepts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        padding: 40px 20px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 48px;
+        background: linear-gradient(135deg, #6B46C1, #88C0D0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .logo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+    
+    .logo-card {
+        background: #16213e;
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .logo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(136, 192, 208, 0.3);
+    }
+    
+    .logo-container {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0f1625;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .logo-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #88C0D0;
+    }
+    
+    .logo-description {
+        font-size: 14px;
+        color: #aaa;
+        line-height: 1.5;
+    }
+    
+    /* Logo Styles */
+    .rune-glow {
+        font-size: 120px;
+        font-weight: 300;
+        position: relative;
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+        from { 
+            text-shadow: 0 0 10px #6B46C1, 0 0 20px #6B46C1, 0 0 30px #6B46C1;
+            color: #88C0D0;
+        }
+        to { 
+            text-shadow: 0 0 20px #88C0D0, 0 0 30px #88C0D0, 0 0 40px #88C0D0;
+            color: #FFB700;
+        }
+    }
+    
+    .rune-geometric {
+        width: 120px;
+        height: 120px;
+        position: relative;
+    }
+    
+    .rune-geometric svg {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .rune-circle {
+        width: 140px;
+        height: 140px;
+        position: relative;
+    }
+    
+    .rune-minimal {
+        font-size: 80px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: -10px;
+        color: #FFB700;
+    }
+    
+    .terminal-preview {
+        background: #000;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 40px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    .terminal-preview pre {
+        color: #00FF00;
+    }
+    
+    .color-palette {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .color-swatch {
+        text-align: center;
+    }
+    
+    .color-box {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        transition: transform 0.3s ease;
+    }
+    
+    .color-box:hover {
+        transform: scale(1.1);
+    }
+    
+    .ascii-art {
+        font-size: 16px;
+        line-height: 1;
+        color: #88C0D0;
+        font-weight: bold;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <h1>Rune Logo Concepts</h1>
+
+```
+    <div class="logo-grid">
+        <div class="logo-card">
+            <div class="logo-container">
+                <div class="rune-glow">ᚱ</div>
+            </div>
+            <h3 class="logo-title">Glowing Rune (Primary)</h3>
+            <p class="logo-description">Norse Raido rune with animated glow effect. Represents journey and rhythm. Perfect for web and marketing.</p>
+        </div>
+        
+        <div class="logo-card">
+            <div class="logo-container">
+                <div class="rune-geometric">
+                    <svg viewBox="0 0 120 120">
+                        <defs>
+                            <linearGradient id="runeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6B46C1;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#88C0D0;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Geometric Rune Design -->
+                        <path d="M60 10 L60 110 M60 30 L90 60 M60 60 L90 90" 
+                              stroke="url(#runeGrad)" 
+                              stroke-width="8" 
+                              stroke-linecap="round" 
+                              fill="none"/>
+                        <circle cx="60" cy="60" r="55" 
+                                stroke="url(#runeGrad)" 
+                                stroke-width="2" 
+                                fill="none" 
+                                opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="logo-title">Geometric Modern</h3>
+            <p class="logo-description">Clean, modern interpretation with gradient styling. Scalable vector for any size.</p>
+        </div>
+        
+        <div class="logo-card">
+            <div class="logo-container">
+                <div class="rune-circle">
+                    <svg viewBox="0 0 140 140">
+                        <defs>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- Circular Rune Pattern -->
+                        <circle cx="70" cy="70" r="60" 
+                                fill="none" 
+                                stroke="#2E3440" 
+                                stroke-width="2"/>
+                        <text x="70" y="90" 
+                              text-anchor="middle" 
+                              font-size="60" 
+                              fill="#FFB700"
+                              filter="url(#glow)">ᚱ</text>
+                        <!-- Decorative dots -->
+                        <circle cx="70" cy="20" r="3" fill="#88C0D0"/>
+                        <circle cx="120" cy="70" r="3" fill="#88C0D0"/>
+                        <circle cx="70" cy="120" r="3" fill="#88C0D0"/>
+                        <circle cx="20" cy="70" r="3" fill="#88C0D0"/>
+                    </svg>
+                </div>
+            </div>
+            <h3 class="logo-title">Runic Circle</h3>
+            <p class="logo-description">Enclosed rune with cardinal points. Represents daily cycles and balance.</p>
+        </div>
+        
+        <div class="logo-card">
+            <div class="logo-container">
+                <pre class="ascii-art">
+```
+
+╔═╗
+╠╦╝ une
+╩╚═
+</pre>
+</div>
+<h3 class="logo-title">ASCII Terminal (Primary CLI)</h3>
+<p class="logo-description">Pure ASCII art for terminal display. This is what users will see in the CLI.</p>
+</div>
+
+```
+        <div class="logo-card">
+            <div class="logo-container">
+                <svg viewBox="0 0 120 120" style="width: 120px; height: 120px;">
+                    <defs>
+                        <radialGradient id="crystalGrad">
+                            <stop offset="0%" style="stop-color:#FFB700;stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:#6B46C1;stop-opacity:1" />
+                        </radialGradient>
+                    </defs>
+                    <!-- Crystal shape -->
+                    <path d="M60 20 L80 50 L80 90 L60 100 L40 90 L40 50 Z" 
+                          fill="url(#crystalGrad)" 
+                          stroke="#88C0D0" 
+                          stroke-width="2"/>
+                    <!-- Inner rune -->
+                    <text x="60" y="75" 
+                          text-anchor="middle" 
+                          font-size="40" 
+                          fill="#FFF"
+                          opacity="0.9">ᚱ</text>
+                </svg>
+            </div>
+            <h3 class="logo-title">Crystal Rune</h3>
+            <p class="logo-description">Gem-like container with embedded rune. Premium feel for enterprise branding.</p>
+        </div>
+        
+        <div class="logo-card">
+            <div class="logo-container">
+                <div class="rune-minimal">
+                    R⟨⟩
+                </div>
+            </div>
+            <h3 class="logo-title">Minimal Text</h3>
+            <p class="logo-description">Ultra-minimal approach using standard characters. Fallback for limited environments.</p>
+        </div>
+    </div>
+    
+    <div class="terminal-preview">
+        <h2 style="color: #88C0D0; margin-bottom: 20px;">Terminal Preview:</h2>
+        <pre>
+```
+
+$ rune init –guided
+
+╔═╗
+╠╦╝ une  v1.0.0
+╩╚═
+
+Welcome to Rune! Let’s cast your daily rituals.
+
+? What time do you usually start work? 9:00 AM
+? How many hours do you typically work? 8
+? Which tools do you use? [Docker, Git, VS Code]
+? Enable focus mode (DND) during work? Yes
+
+✓ The binding is complete: configuration created at ~/.rune/config.yaml
+✓ Shell completions installed
+
+Cast ‘rune start’ to begin your workday!
+</pre>
+</div>
+
+```
+    <div class="color-palette">
+        <div class="color-swatch">
+            <div class="color-box" style="background: #6B46C1; color: white;">#6B46C1</div>
+            <p>Deep Purple<br><small>Primary</small></p>
+        </div>
+        <div class="color-swatch">
+            <div class="color-box" style="background: #2E3440; color: white;">#2E3440</div>
+            <p>Norse Blue<br><small>Secondary</small></p>
+        </div>
+        <div class="color-swatch">
+            <div class="color-box" style="background: #FFB700; color: black;">#FFB700</div>
+            <p>Mystic Gold<br><small>Accent</small></p>
+        </div>
+        <div class="color-swatch">
+            <div class="color-box" style="background: #88C0D0; color: black;">#88C0D0</div>
+            <p>Rune Cyan<br><small>Glow</small></p>
+        </div>
+        <div class="color-swatch">
+            <div class="color-box" style="background: #00FF00; color: black;">#00FF00</div>
+            <p>Terminal Green<br><small>CLI Output</small></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add click-to-copy functionality for hex codes
+    document.querySelectorAll('.color-box').forEach(box => {
+        box.addEventListener('click', () => {
+            const color = box.textContent;
+            navigator.clipboard.writeText(color);
+            const original = box.textContent;
+            box.textContent = 'Copied!';
+            setTimeout(() => {
+                box.textContent = original;
+            }, 1000);
+        });
+    });
+</script>
+```
+
+</body>
+</html>
