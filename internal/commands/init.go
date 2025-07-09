@@ -61,10 +61,10 @@ func runInit(cmd *cobra.Command, args []string) error {
 }
 
 func runGuidedInit(configPath string) error {
-	fmt.Println("██▀▀▀ █   █ █▀▀█ ██▀▀")
-	fmt.Println("██▀▀▀ █   █ █  █ █▀▀▀")
-	fmt.Println("██    █   █ █  █ █   ")
-	fmt.Println("██    █████ █  █ ████")
+	fmt.Println("██▀▀█ █   █ █▀▀█ ██▀▀")
+	fmt.Println("██▀▀  █   █ █  █ █▀▀▀")
+	fmt.Println("██ ██ █   █ █  █ █   ")
+	fmt.Println("██  █ █████ █  █ ████")
 	fmt.Println()
 	fmt.Println("Welcome to Rune! Let's cast your daily rituals.")
 	fmt.Println()
