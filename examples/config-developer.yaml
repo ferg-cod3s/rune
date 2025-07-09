@@ -1,0 +1,104 @@
+# Developer-Focused Rune Configuration
+# Advanced configuration for software developers with multiple projects
+
+version: 1
+
+settings:
+  work_hours: 8.0
+  break_interval: 30m
+  idle_threshold: 10m  # Longer threshold for deep work
+
+projects:
+  - name: "frontend"
+    detect: ["package.json", "yarn.lock", "pnpm-lock.yaml"]
+  - name: "backend"
+    detect: ["go.mod", "Cargo.toml", "requirements.txt"]
+  - name: "mobile"
+    detect: ["pubspec.yaml", "ios/", "android/"]
+  - name: "docs"
+    detect: ["*.md", "docs/", "README*"]
+
+rituals:
+  start:
+    global:
+      - name: "Check System Resources"
+        command: "df -h"
+        optional: true
+      - name: "Update Package Lists"
+        command: "brew update"
+        optional: true
+        background: true
+
+    per_project:
+      frontend:
+        - name: "Install Dependencies"
+          command: "pnpm install"
+          optional: true
+        - name: "Run Type Check"
+          command: "pnpm typecheck"
+          optional: true
+        - name: "Start Dev Server"
+          command: "pnpm dev"
+          background: true
+          optional: true
+
+      backend:
+        - name: "Download Dependencies"
+          command: "go mod download"
+          optional: true
+        - name: "Run Tests"
+          command: "go test ./..."
+          optional: true
+        - name: "Start Development Server"
+          command: "go run main.go"
+          background: true
+          optional: true
+
+      mobile:
+        - name: "Get Dependencies"
+          command: "flutter pub get"
+          optional: true
+        - name: "Run Code Generation"
+          command: "flutter packages pub run build_runner build"
+          optional: true
+
+  stop:
+    global:
+      - name: "Commit Work in Progress"
+        command: "git add . && git commit -m 'WIP: End of session'"
+        optional: true
+      - name: "Push Changes"
+        command: "git push"
+        optional: true
+
+    per_project:
+      frontend:
+        - name: "Build Production"
+          command: "pnpm build"
+          optional: true
+        - name: "Run Linter"
+          command: "pnpm lint"
+          optional: true
+
+      backend:
+        - name: "Format Code"
+          command: "go fmt ./..."
+          optional: true
+        - name: "Run Security Check"
+          command: "gosec ./..."
+          optional: true
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: "dev-team"
+    dnd_on_start: true
+  calendar:
+    provider: "google"
+    block_calendar: true
+  telemetry:
+    enabled: false
+    segment_write_key: ""
+    sentry_dsn: ""

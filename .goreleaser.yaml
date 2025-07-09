@@ -1,0 +1,92 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    main: ./cmd/rune
+    binary: rune
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/johnferguson/rune/internal/commands.version={{.Version}} -X github.com/johnferguson/rune/internal/telemetry.segmentWriteKey={{.Env.RUNE_SEGMENT_WRITE_KEY}} -X github.com/johnferguson/rune/internal/telemetry.sentryDSN={{.Env.RUNE_SENTRY_DSN}}
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+    - goos: windows
+      format: zip
+    files:
+      - README.md
+      - LICENSE
+      - completions/*
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+
+brews:
+  - name: rune
+    homepage: https://github.com/johnferguson/rune
+    description: "A productivity CLI tool for developers"
+    license: MIT
+    repository:
+      owner: johnferguson
+      name: homebrew-tap
+    folder: Formula
+    install: |
+      bin.install "rune"
+      bash_completion.install "completions/rune.bash" => "rune"
+      zsh_completion.install "completions/rune.zsh" => "_rune"
+      fish_completion.install "completions/rune.fish"
+    test: |
+      system "#{bin}/rune --version"
+
+nfpms:
+  - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage: https://github.com/johnferguson/rune
+    description: A productivity CLI tool for developers
+    maintainer: John Ferguson <your-email@example.com>
+    license: MIT
+    vendor: John Ferguson
+    formats:
+      - deb
+      - rpm
+    contents:
+      - src: ./completions/rune.bash
+        dst: /usr/share/bash-completion/completions/rune
+        file_info:
+          mode: 0644
+      - src: ./completions/rune.zsh
+        dst: /usr/share/zsh/site-functions/_rune
+        file_info:
+          mode: 0644
+      - src: ./completions/rune.fish
+        dst: /usr/share/fish/completions/rune.fish
+        file_info:
+          mode: 0644

@@ -1,0 +1,46 @@
+# Basic Rune Configuration
+# This is a minimal configuration for getting started with Rune
+
+version: 1
+
+settings:
+  work_hours: 8.0
+  break_interval: 25m  # Pomodoro-style breaks
+  idle_threshold: 5m   # Auto-pause after 5 minutes of inactivity
+
+projects:
+  - name: "default"
+    detect: ["*"]
+
+rituals:
+  start:
+    global:
+      - name: "Check Git Status"
+        command: "git status --porcelain"
+        optional: true
+      - name: "Pull Latest Changes"
+        command: "git pull"
+        optional: true
+    per_project: {}
+
+  stop:
+    global:
+      - name: "Show Git Status"
+        command: "git status"
+        optional: true
+    per_project: {}
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: ""
+    dnd_on_start: false
+  calendar:
+    provider: ""
+    block_calendar: false
+  telemetry:
+    enabled: false
+    segment_write_key: ""
+    sentry_dsn: ""

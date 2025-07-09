@@ -1,0 +1,57 @@
+# Rune Configuration with Telemetry Integration
+# This configuration shows how to set up Segment and Sentry integration
+
+version: 1
+
+settings:
+  work_hours: 8.0
+  break_interval: 25m
+  idle_threshold: 5m
+
+projects:
+  - name: "web-app"
+    detect: ["*/web-app/*", "*/frontend/*"]
+  - name: "api"
+    detect: ["*/api/*", "*/backend/*"]
+  - name: "default"
+    detect: ["*"]
+
+rituals:
+  start:
+    global:
+      - name: "Check Git Status"
+        command: "git status --porcelain"
+        optional: true
+      - name: "Pull Latest Changes"
+        command: "git pull"
+        optional: true
+    per_project: {}
+
+  stop:
+    global:
+      - name: "Show Git Status"
+        command: "git status"
+        optional: true
+    per_project: {}
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: ""
+    dnd_on_start: false
+  calendar:
+    provider: ""
+    block_calendar: false
+  telemetry:
+    enabled: true
+    # IMPORTANT: Do not put secrets in this config file!
+    # Instead, set these environment variables:
+    # - RUNE_SEGMENT_WRITE_KEY: Your Segment write key
+    # - RUNE_SENTRY_DSN: Your Sentry DSN
+    # 
+    # You can also copy .env.example to .env and set values there
+    # The application will automatically use environment variables over config values
+    segment_write_key: ""  # Leave empty - use RUNE_SEGMENT_WRITE_KEY env var
+    sentry_dsn: ""         # Leave empty - use RUNE_SENTRY_DSN env var

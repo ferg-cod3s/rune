@@ -1,0 +1,91 @@
+# Remote Work Rune Configuration
+# Optimized for remote workers with focus on communication and boundaries
+
+version: 1
+
+settings:
+  work_hours: 8.0
+  break_interval: 45m  # Longer breaks for remote work
+  idle_threshold: 3m   # Shorter threshold for remote accountability
+
+projects:
+  - name: "meetings"
+    detect: ["zoom", "meet", "teams"]
+  - name: "documentation"
+    detect: ["*.md", "*.rst", "docs/", "wiki/"]
+  - name: "communication"
+    detect: ["slack", "discord", "email"]
+
+rituals:
+  start:
+    global:
+      - name: "Set Slack Status to Working"
+        command: "curl -X POST -H 'Authorization: Bearer $SLACK_TOKEN' -H 'Content-type: application/json' --data '{\"profile\":{\"status_text\":\"Working\",\"status_emoji\":\":computer:\"}}' https://slack.com/api/users.profile.set"
+        optional: true
+      - name: "Check Calendar for Today"
+        command: "gcalcli agenda"
+        optional: true
+      - name: "Open Communication Apps"
+        command: "open -a Slack && open -a Discord"
+        optional: true
+        background: true
+
+    per_project:
+      meetings:
+        - name: "Prepare Meeting Notes"
+          command: "mkdir -p ~/meetings/$(date +%Y-%m-%d) && touch ~/meetings/$(date +%Y-%m-%d)/notes.md"
+          optional: true
+        - name: "Check Audio/Video"
+          command: "system_profiler SPAudioDataType | grep -A 5 'Built-in'"
+          optional: true
+
+      documentation:
+        - name: "Start Documentation Server"
+          command: "mkdocs serve"
+          background: true
+          optional: true
+        - name: "Open Documentation Editor"
+          command: "code docs/"
+          background: true
+          optional: true
+
+  stop:
+    global:
+      - name: "Set Slack Status to Away"
+        command: "curl -X POST -H 'Authorization: Bearer $SLACK_TOKEN' -H 'Content-type: application/json' --data '{\"profile\":{\"status_text\":\"Away\",\"status_emoji\":\":house:\"}}' https://slack.com/api/users.profile.set"
+        optional: true
+      - name: "Send End of Day Summary"
+        command: "echo 'Work session completed at $(date)' | pbcopy"
+        optional: true
+      - name: "Close Work Applications"
+        command: "osascript -e 'quit app \"Slack\"' && osascript -e 'quit app \"Discord\"'"
+        optional: true
+
+    per_project:
+      meetings:
+        - name: "Archive Meeting Notes"
+          command: "cp ~/meetings/$(date +%Y-%m-%d)/notes.md ~/Documents/meeting-archive/"
+          optional: true
+
+      documentation:
+        - name: "Build Documentation"
+          command: "mkdocs build"
+          optional: true
+        - name: "Commit Documentation Changes"
+          command: "git add docs/ && git commit -m 'Update documentation'"
+          optional: true
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: "remote-team"
+    dnd_on_start: true
+  calendar:
+    provider: "google"
+    block_calendar: true
+  telemetry:
+    enabled: false
+    segment_write_key: ""
+    sentry_dsn: ""

@@ -1,0 +1,120 @@
+# Freelancer Rune Configuration
+# Designed for freelancers managing multiple client projects
+
+version: 1
+
+settings:
+  work_hours: 6.0      # Flexible hours
+  break_interval: 20m  # Frequent short breaks
+  idle_threshold: 2m   # Strict time tracking for billing
+
+projects:
+  - name: "client-a"
+    detect: ["client-a", "project-alpha"]
+  - name: "client-b"
+    detect: ["client-b", "project-beta"]
+  - name: "client-c"
+    detect: ["client-c", "project-gamma"]
+  - name: "admin"
+    detect: ["invoices", "admin", "business"]
+  - name: "marketing"
+    detect: ["website", "blog", "social"]
+
+rituals:
+  start:
+    global:
+      - name: "Log Work Session Start"
+        command: "echo '$(date): Started work session' >> ~/work-log.txt"
+        optional: false
+      - name: "Check Email"
+        command: "open -a Mail"
+        optional: true
+        background: true
+      - name: "Review Today's Tasks"
+        command: "cat ~/tasks/$(date +%Y-%m-%d).md"
+        optional: true
+
+    per_project:
+      client-a:
+        - name: "Log Client A Session"
+          command: "echo '$(date): Client A - Session started' >> ~/billing/client-a.log"
+          optional: false
+        - name: "Open Client A Project"
+          command: "code ~/projects/client-a/"
+          background: true
+          optional: true
+
+      client-b:
+        - name: "Log Client B Session"
+          command: "echo '$(date): Client B - Session started' >> ~/billing/client-b.log"
+          optional: false
+        - name: "Open Client B Project"
+          command: "code ~/projects/client-b/"
+          background: true
+          optional: true
+
+      client-c:
+        - name: "Log Client C Session"
+          command: "echo '$(date): Client C - Session started' >> ~/billing/client-c.log"
+          optional: false
+
+      admin:
+        - name: "Open Accounting Software"
+          command: "open -a QuickBooks"
+          background: true
+          optional: true
+        - name: "Check Pending Invoices"
+          command: "ls ~/invoices/pending/"
+          optional: true
+
+  stop:
+    global:
+      - name: "Log Work Session End"
+        command: "echo '$(date): Ended work session' >> ~/work-log.txt"
+        optional: false
+      - name: "Backup Work"
+        command: "rsync -av ~/projects/ ~/Dropbox/project-backup/"
+        optional: true
+        background: true
+
+    per_project:
+      client-a:
+        - name: "Log Client A Session End"
+          command: "echo '$(date): Client A - Session ended' >> ~/billing/client-a.log"
+          optional: false
+        - name: "Generate Time Report"
+          command: "rune report --project client-a --format csv --output ~/billing/client-a-$(date +%Y-%m-%d).csv"
+          optional: true
+
+      client-b:
+        - name: "Log Client B Session End"
+          command: "echo '$(date): Client B - Session ended' >> ~/billing/client-b.log"
+          optional: false
+        - name: "Generate Time Report"
+          command: "rune report --project client-b --format csv --output ~/billing/client-b-$(date +%Y-%m-%d).csv"
+          optional: true
+
+      client-c:
+        - name: "Log Client C Session End"
+          command: "echo '$(date): Client C - Session ended' >> ~/billing/client-c.log"
+          optional: false
+
+      admin:
+        - name: "Update Business Metrics"
+          command: "echo 'Admin time: $(rune report --project admin --today)' >> ~/business-metrics.txt"
+          optional: true
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: ""
+    dnd_on_start: false  # May need to be available for clients
+  calendar:
+    provider: "google"
+    block_calendar: false  # Flexible scheduling
+  telemetry:
+    enabled: false
+    segment_write_key: ""
+    sentry_dsn: ""
