@@ -6,7 +6,7 @@ This guide covers all the ways to install Rune on your system.
 
 ### Linux/macOS
 ```bash
-curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh
 ```
 
 ### Windows (PowerShell)
@@ -18,25 +18,25 @@ curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh |
 
 ### Homebrew (macOS/Linux)
 ```bash
-brew tap johnferguson/tap
+brew tap ferg-cod3s/tap
 brew install rune
 ```
 
 ### Go Install
 ```bash
-go install github.com/johnferguson/rune/cmd/rune@latest
+go install github.com/ferg-cod3s/rune/cmd/rune@latest
 ```
 
 ## Manual Installation
 
 ### Download Binary
-1. Go to [GitHub Releases](https://github.com/johnferguson/rune/releases)
+1. Go to [GitHub Releases](https://github.com/ferg-cod3s/rune/releases)
 2. Download the appropriate binary for your platform
 3. Extract and place in your PATH
 
 ### Build from Source
 ```bash
-git clone https://github.com/johnferguson/rune.git
+git clone https://github.com/ferg-cod3s/rune.git
 cd rune
 make build
 sudo cp bin/rune /usr/local/bin/
@@ -47,14 +47,14 @@ sudo cp bin/rune /usr/local/bin/
 ### Debian/Ubuntu
 ```bash
 # Download .deb from releases
-wget https://github.com/johnferguson/rune/releases/latest/download/rune_linux_amd64.deb
+wget https://github.com/ferg-cod3s/rune/releases/latest/download/rune_linux_amd64.deb
 sudo dpkg -i rune_linux_amd64.deb
 ```
 
 ### RHEL/CentOS/Fedora
 ```bash
 # Download .rpm from releases
-wget https://github.com/johnferguson/rune/releases/latest/download/rune_linux_amd64.rpm
+wget https://github.com/ferg-cod3s/rune/releases/latest/download/rune_linux_amd64.rpm
 sudo rpm -i rune_linux_amd64.rpm
 ```
 

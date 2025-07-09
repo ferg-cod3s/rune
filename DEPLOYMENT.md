@@ -7,13 +7,13 @@ This document outlines how to make Rune installable and track its usage.
 ### 1. Go Install (Immediate)
 Users can install directly from GitHub:
 ```bash
-go install github.com/johnferguson/rune/cmd/rune@latest
+go install github.com/ferg-cod3s/rune/cmd/rune@latest
 ```
 
 ### 2. Install Script (Recommended)
 Quick installation via curl:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh
 ```
 
 ### 3. GitHub Releases (Automated)
@@ -22,7 +22,7 @@ curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh |
 - Homebrew formula (requires separate tap repository)
 
 ### 4. Package Managers
-- **Homebrew**: `brew tap johnferguson/tap && brew install rune`
+- **Homebrew**: `brew tap ferg-cod3s/tap && brew install rune`
 - **Debian/Ubuntu**: Download `.deb` from releases
 - **RHEL/CentOS**: Download `.rpm` from releases
 

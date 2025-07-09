@@ -130,4 +130,4 @@ rituals:
 
 - Run `rune --help` for command help
 - Check [Troubleshooting](./troubleshooting.md)
-- Join our [Community Discussions](https://github.com/johnferguson/rune/discussions)
+- Join our [Community Discussions](https://github.com/ferg-cod3s/rune/discussions)

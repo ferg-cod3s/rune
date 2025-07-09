@@ -176,7 +176,7 @@ rune status  # Shows detected project
 - Check the main documentation: `rune --help`
 - Validate your config: `rune config validate`
 - Test rituals: `rune ritual test [start|stop]`
-- Report issues: [GitHub Issues](https://github.com/johnferguson/rune/issues)
+- Report issues: [GitHub Issues](https://github.com/ferg-cod3s/rune/issues)
 
 ## Contributing Examples
 

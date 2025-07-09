@@ -157,7 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Contributors
 
 ### Core Team
-- John Ferguson (@johnferguson) - Project Lead & Primary Developer
+- John Ferguson (@ferg-cod3s) - Project Lead & Primary Developer
 
 ### Community Contributors
 - Contributors will be listed here as the project grows

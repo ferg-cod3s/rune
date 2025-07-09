@@ -53,8 +53,8 @@ We welcome contributions to improve our documentation! Please see our [Contribut
 
 ## Need Help?
 
-- 🐛 [Report Issues](https://github.com/johnferguson/rune/issues)
-- 💬 [Join Discussions](https://github.com/johnferguson/rune/discussions)
+- 🐛 [Report Issues](https://github.com/ferg-cod3s/rune/issues)
+- 💬 [Join Discussions](https://github.com/ferg-cod3s/rune/discussions)
 - 📧 [Contact Support](mailto:support@rune.dev)
 
 ---

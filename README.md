@@ -29,23 +29,23 @@ Rune is a developer-first CLI productivity platform that automates daily work ri
 
 **Quick Install (Linux/macOS)**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh
 ```
 
 **Homebrew (macOS)** - *Coming with v0.1.0 stable*
 ```bash
 # Not yet available - use Go install or download binary
-brew tap johnferguson/tap
+brew tap ferg-cod3s/tap
 brew install rune
 ```
 
 **Go Install**
 ```bash
-go install github.com/johnferguson/rune/cmd/rune@latest
+go install github.com/ferg-cod3s/rune/cmd/rune@latest
 ```
 
 **Download Binary**
-Download the latest release from [GitHub Releases](https://github.com/johnferguson/rune/releases) and place it in your PATH.
+Download the latest release from [GitHub Releases](https://github.com/ferg-cod3s/rune/releases) and place it in your PATH.
 
 **Package Managers**
 - **Debian/Ubuntu**: Download `.deb` from releases
@@ -212,7 +212,7 @@ rituals:
 ### Building from Source
 
 ```bash
-git clone https://github.com/johnferguson/rune.git
+git clone https://github.com/ferg-cod3s/rune.git
 cd rune
 make build
 ```
@@ -308,8 +308,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 - **Documentation**: [docs.rune.dev](https://docs.rune.dev)
-- **Issues**: [GitHub Issues](https://github.com/johnferguson/rune/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/johnferguson/rune/discussions)
+- **Issues**: [GitHub Issues](https://github.com/ferg-cod3s/rune/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ferg-cod3s/rune/discussions)
 - **Discord**: [Rune Community](https://discord.gg/rune)
 
 ## Roadmap
