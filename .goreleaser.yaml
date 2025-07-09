@@ -49,22 +49,23 @@ changelog:
       - '^docs:'
       - '^test:'
 
-brews:
-  - name: rune
-    homepage: https://github.com/johnferguson/rune
-    description: "A productivity CLI tool for developers"
-    license: MIT
-    repository:
-      owner: johnferguson
-      name: homebrew-tap
-    folder: Formula
-    install: |
-      bin.install "rune"
-      bash_completion.install "completions/rune.bash" => "rune"
-      zsh_completion.install "completions/rune.zsh" => "_rune"
-      fish_completion.install "completions/rune.fish"
-    test: |
-      system "#{bin}/rune --version"
+# Homebrew tap disabled for alpha release
+# brews:
+#   - name: rune
+#     homepage: https://github.com/johnferguson/rune
+#     description: "A productivity CLI tool for developers"
+#     license: MIT
+#     repository:
+#       owner: johnferguson
+#       name: homebrew-tap
+#     folder: Formula
+#     install: |
+#       bin.install "rune"
+#       bash_completion.install "completions/rune.bash" => "rune"
+#       zsh_completion.install "completions/rune.zsh" => "_rune"
+#       fish_completion.install "completions/rune.fish"
+#     test: |
+#       system "#{bin}/rune --version"
 
 nfpms:
   - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
