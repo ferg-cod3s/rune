@@ -10,6 +10,8 @@
 
 **Ancient wisdom for modern workflows**
 
+> ⚠️ **Alpha Release**: Rune is currently in alpha development. Features may change, and some functionality is still being implemented. Use with caution in production environments.
+
 Rune is a developer-first CLI productivity platform that automates daily work rituals, enforces healthy work-life boundaries, and integrates seamlessly with existing developer workflows.
 
 ## Features
@@ -30,8 +32,9 @@ Rune is a developer-first CLI productivity platform that automates daily work ri
 curl -fsSL https://raw.githubusercontent.com/johnferguson/rune/main/install.sh | sh
 ```
 
-**Homebrew (macOS)**
+**Homebrew (macOS)** - *Coming with v0.1.0 stable*
 ```bash
+# Not yet available - use Go install or download binary
 brew tap johnferguson/tap
 brew install rune
 ```

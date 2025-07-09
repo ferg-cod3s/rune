@@ -8,10 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial project setup and documentation
-- Product Requirements Document (PRD)
-- Development guidelines and standards
-- Project structure planning
+- Nothing yet
 
 ### Changed
 - Nothing yet
@@ -28,7 +25,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
-## [0.1.0] - TBD
+## [0.1.0-alpha.1] - 2025-01-09
+
+### Added
+- **Core CLI Structure**: Complete command structure with Cobra framework
+- **Dual Logo System**: 
+  - SubZero ASCII art for daily CLI use (highly readable)
+  - Runic ceremonial logo for special initialization moments
+- **Security-First Configuration**: Environment variable support for API keys
+- **Comprehensive Documentation**: Installation guides, quick start, and API docs
+- **Cross-Platform Support**: macOS, Linux, Windows binaries via GoReleaser
+- **Shell Completions**: Bash, Zsh, Fish completion scripts
+- **Commands Implemented**:
+  - `rune init --guided` - Interactive configuration setup with ceremonial logo
+  - `rune --help` - Command reference with SubZero logo
+  - `rune --version` - Version display with branding
+  - `rune config` - Configuration management (framework)
+  - `rune start/stop/pause/resume` - Time tracking (framework)
+  - `rune status` - Session status display (framework)
+  - `rune report` - Time reporting (framework)
+  - `rune ritual` - Ritual management (framework)
+
+### Security
+- Environment variable configuration for sensitive data (.env support)
+- No hardcoded secrets in codebase
+- Secure .gitignore preventing credential commits
+- Template .env.example for safe local development
+
+### Documentation
+- Complete installation guide for all platforms
+- Quick start tutorial with examples
+- Command reference documentation
+- Security best practices guide
+- Structured docs/ directory ready for docs site
+
+### Infrastructure
+- GitHub Actions CI/CD pipeline
+- GoReleaser configuration for multi-platform builds
+- Automated testing on push and PR
+- Release workflow with binary artifacts
+
+### Notes
+- **Alpha Release**: Core functionality is framework-only
+- Time tracking, ritual execution, and integrations not yet implemented
+- Configuration parsing and validation are in place
+- Focus on CLI experience, branding, and developer setup
+
+## [0.1.0] - TBD (Planned Beta)
 
 ### Added
 - Basic CLI structure with Cobra framework
