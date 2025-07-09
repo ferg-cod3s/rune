@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Rune CLI Installation Script
+# Usage: curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh
+# Or with options: curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh -s -- --skip-homebrew
 set -e
 
 # Colors for output
@@ -13,6 +15,36 @@ NC='\033[0m' # No Color
 REPO="ferg-cod3s/rune"
 BINARY_NAME="rune"
 INSTALL_DIR="/usr/local/bin"
+SKIP_HOMEBREW=false
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --skip-homebrew)
+            SKIP_HOMEBREW=true
+            shift
+            ;;
+        -h|--help)
+            echo "Rune CLI Installation Script"
+            echo ""
+            echo "Usage: $0 [OPTIONS]"
+            echo ""
+            echo "Options:"
+            echo "  --skip-homebrew    Skip Homebrew suggestion even if available"
+            echo "  -h, --help         Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh"
+            echo "  curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh -s -- --skip-homebrew"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
 
 # Detect OS and architecture
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -33,6 +65,17 @@ esac
 echo -e "${GREEN}Installing Rune CLI...${NC}"
 echo "OS: $OS"
 echo "Architecture: $ARCH"
+
+# Check if Homebrew is available and suggest using it instead
+if [ "$SKIP_HOMEBREW" = false ] && command -v brew >/dev/null 2>&1; then
+    echo ""
+    echo -e "${YELLOW}📦 Homebrew detected!${NC}"
+    echo "For easier installation and updates, consider using:"
+    echo "  brew install ferg-cod3s/tap/rune"
+    echo ""
+    echo "Or continue with direct binary installation..."
+    echo ""
+fi
 
 # Get latest release
 echo -e "${YELLOW}Fetching latest release...${NC}"
@@ -109,8 +152,17 @@ rm -rf "$TMP_DIR"
 if command -v "$BINARY_NAME" >/dev/null 2>&1; then
     echo -e "${GREEN}✓ Rune CLI installed successfully!${NC}"
     echo ""
-    echo "Run 'rune --help' to get started."
-    echo "Run 'rune init' to create your first configuration."
+    echo "🚀 Getting Started:"
+    echo "  rune --help              # Show available commands"
+    echo "  rune init --guided       # Create your first configuration"
+    echo "  rune update              # Update to latest version"
+    echo ""
+    if [ "$SKIP_HOMEBREW" = false ] && command -v brew >/dev/null 2>&1; then
+        echo "💡 For future updates, you can also use:"
+        echo "  brew install ferg-cod3s/tap/rune  # Switch to Homebrew"
+        echo "  brew upgrade rune                 # Update via Homebrew"
+        echo ""
+    fi
 else
     echo -e "${RED}Installation failed. Please check that $INSTALL_DIR is in your PATH.${NC}"
     exit 1

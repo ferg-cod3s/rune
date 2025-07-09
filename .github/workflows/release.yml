@@ -24,6 +24,16 @@ jobs:
     - name: Run tests
       run: go test -v ./...
 
+    - name: Create Sentry Release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: rune
+      with:
+        environment: production
+        version: ${{ github.ref_name }}
+
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
       with:
@@ -34,3 +44,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
         RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
+
+    - name: Finalize Sentry Release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: rune
+      with:
+        environment: production
+        version: ${{ github.ref_name }}
+        finalize: true

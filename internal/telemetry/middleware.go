@@ -52,10 +52,16 @@ func WrapCommand(cmd *cobra.Command, originalRun func(cmd *cobra.Command, args [
 		start := time.Now()
 		commandName := cmd.CommandPath()
 
+		// Start command tracking for release health
+		StartCommand(commandName)
+
 		err := originalRun(cmd, args)
 
 		duration := time.Since(start)
 		success := err == nil
+
+		// End command tracking for release health
+		EndCommand(commandName, success, duration)
 
 		TrackCommand(commandName, duration, success)
 
@@ -105,5 +111,19 @@ func CaptureException(err error, tags map[string]string, extra map[string]interf
 func CaptureMessage(message string, level sentry.Level, tags map[string]string) {
 	if globalClient != nil {
 		globalClient.CaptureMessage(message, level, tags)
+	}
+}
+
+// StartCommand starts tracking a command for release health
+func StartCommand(command string) {
+	if globalClient != nil {
+		globalClient.StartCommand(command)
+	}
+}
+
+// EndCommand ends tracking a command for release health
+func EndCommand(command string, success bool, duration time.Duration) {
+	if globalClient != nil {
+		globalClient.EndCommand(command, success, duration)
 	}
 }

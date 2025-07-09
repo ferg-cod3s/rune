@@ -1,4 +1,5 @@
-# GoReleaser v1 configuration
+# GoReleaser v2 configuration
+version: 2
 before:
   hooks:
     - go mod tidy
@@ -17,10 +18,10 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X github.com/ferg-cod3s/rune/internal/commands.version={{.Version}} -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey={{.Env.RUNE_SEGMENT_WRITE_KEY}} -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN={{.Env.RUNE_SENTRY_DSN}}
+      - -s -w -X github.com/ferg-cod3s/rune/internal/commands.version={{.Version}} -X github.com/ferg-cod3s/rune/internal/telemetry.version={{.Version}} -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey={{.Env.RUNE_SEGMENT_WRITE_KEY}} -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN={{.Env.RUNE_SENTRY_DSN}}
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     name_template: >-
       {{ .ProjectName }}_
       {{- title .Os }}_
@@ -30,7 +31,7 @@ archives:
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     format_overrides:
     - goos: windows
-      format: zip
+      formats: [zip]
     files:
       - README.md
       - LICENSE
@@ -40,7 +41,7 @@ checksum:
   name_template: 'checksums.txt'
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
@@ -49,23 +50,46 @@ changelog:
       - '^docs:'
       - '^test:'
 
-# Homebrew tap disabled for alpha release
-# brews:
-#   - name: rune
-#     homepage: https://github.com/ferg-cod3s/rune
-#     description: "A productivity CLI tool for developers"
-#     license: MIT
-#     repository:
-#       owner: johnferguson
-#       name: homebrew-tap
-#     folder: Formula
-#     install: |
-#       bin.install "rune"
-#       bash_completion.install "completions/rune.bash" => "rune"
-#       zsh_completion.install "completions/rune.zsh" => "_rune"
-#       fish_completion.install "completions/rune.fish"
-#     test: |
-#       system "#{bin}/rune --version"
+brews:
+  - name: rune
+    homepage: https://github.com/ferg-cod3s/rune
+    description: "Ancient wisdom for modern workflows - A developer-first CLI productivity platform"
+    license: MIT
+    repository:
+      owner: ferg-cod3s
+      name: homebrew-tap
+      branch: main
+    directory: Formula
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    install: |
+      bin.install "rune"
+      
+      # Install shell completions
+      bash_completion.install "completions/rune.bash" => "rune"
+      zsh_completion.install "completions/rune.zsh" => "_rune"
+      fish_completion.install "completions/rune.fish"
+      
+      # Create default config directory
+      (etc/"rune").mkpath
+    test: |
+      system "#{bin}/rune", "--version"
+      system "#{bin}/rune", "--help"
+    dependencies:
+      - name: git
+        type: optional
+    caveats: |
+      To get started with rune:
+        1. Initialize your configuration: rune init --guided
+        2. Start your workday: rune start
+        3. Check status: rune status
+        4. End your workday: rune stop
+      
+      Configuration file location: ~/.rune/config.yaml
+      
+      For more information, visit: https://github.com/ferg-cod3s/rune
 
 nfpms:
   - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'

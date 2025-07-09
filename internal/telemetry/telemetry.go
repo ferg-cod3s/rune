@@ -17,6 +17,7 @@ type Client struct {
 	sentryEnabled bool
 	enabled       bool
 	userID        string
+	sessionID     string
 }
 
 func NewClient(userSegmentKey, userSentryDSN string) *Client {
@@ -41,6 +42,7 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 		enabled:       enabled,
 		userID:        userID,
 		sentryEnabled: finalSentryDSN != "",
+		sessionID:     generateSessionID(),
 	}
 
 	// Initialize Segment client if enabled and write key provided
@@ -262,14 +264,68 @@ func generateAnonymousID() string {
 	return fmt.Sprintf("anon_%s_%d", hostname, time.Now().Unix())
 }
 
+func generateSessionID() string {
+	return fmt.Sprintf("session_%d", time.Now().UnixNano())
+}
+
+// StartCommand starts tracking a command execution for release health
+func (c *Client) StartCommand(command string) {
+	if !c.sentryEnabled {
+		return
+	}
+
+	// Add breadcrumb for command start
+	sentry.AddBreadcrumb(&sentry.Breadcrumb{
+		Message:   fmt.Sprintf("Command started: %s", command),
+		Category:  "command",
+		Level:     sentry.LevelInfo,
+		Timestamp: time.Now(),
+		Data: map[string]interface{}{
+			"command": command,
+			"action":  "start",
+		},
+	})
+}
+
+// EndCommand ends tracking a command execution
+func (c *Client) EndCommand(command string, success bool, duration time.Duration) {
+	if !c.sentryEnabled {
+		return
+	}
+
+	// Add breadcrumb for command end
+	level := sentry.LevelInfo
+	if !success {
+		level = sentry.LevelError
+	}
+
+	sentry.AddBreadcrumb(&sentry.Breadcrumb{
+		Message:   fmt.Sprintf("Command %s: %s", map[bool]string{true: "completed", false: "failed"}[success], command),
+		Category:  "command",
+		Level:     level,
+		Timestamp: time.Now(),
+		Data: map[string]interface{}{
+			"command":     command,
+			"action":      "end",
+			"success":     success,
+			"duration_ms": duration.Milliseconds(),
+		},
+	})
+}
+
 // Build-time variables set via ldflags
 var (
 	segmentWriteKey string
 	sentryDSN       string
 )
 
+// Build-time version variable set via ldflags
+var version string
+
 func getVersion() string {
-	// This will be set via ldflags during build
+	if version != "" {
+		return version
+	}
 	return "dev"
 }
 

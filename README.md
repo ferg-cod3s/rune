@@ -27,16 +27,19 @@ Rune is a developer-first CLI productivity platform that automates daily work ri
 
 ### Installation
 
-**Quick Install (Linux/macOS)**
+**Homebrew (Recommended for macOS/Linux)**
+```bash
+brew install ferg-cod3s/tap/rune
+```
+
+**Quick Install Script (Linux/macOS)**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh
 ```
 
-**Homebrew (macOS)** - *Coming with v0.1.0 stable*
+**Skip Homebrew suggestion in install script**
 ```bash
-# Not yet available - use Go install or download binary
-brew tap ferg-cod3s/tap
-brew install rune
+curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | sh -s -- --skip-homebrew
 ```
 
 **Go Install**
@@ -80,6 +83,15 @@ rune stop
 
 # View time reports
 rune report --today
+
+# Update to latest version
+rune update
+
+# Check for updates without installing
+rune update --check
+
+# Update via Homebrew (if installed via brew)
+brew upgrade rune
 ```
 
 ## Configuration
@@ -140,6 +152,7 @@ integrations:
 - `rune status` - Show current session status
 - `rune stop` - End workday and run stop rituals
 - `rune report` - Generate time reports
+- `rune update` - Update rune to the latest version
 
 ### Configuration Commands
 

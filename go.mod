@@ -1,6 +1,8 @@
 module github.com/ferg-cod3s/rune
 
-go 1.24.4
+go 1.23
+
+toolchain go1.24.5
 
 require (
 	github.com/getsentry/sentry-go v0.34.1
