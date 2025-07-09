@@ -1,9 +1,10 @@
 # Rune Documentation
 
 ```
-╔═╗ 
-╠╦╝ une
-╩╚═ 
+██▀▀▀ █   █ █▀▀█ ██▀▀
+██▀▀▀ █   █ █  █ █▀▀▀
+██    █   █ █  █ █   
+██    █████ █  █ ████
 ```
 
 **Ancient wisdom for modern workflows**

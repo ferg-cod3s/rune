@@ -1,9 +1,10 @@
 # Rune CLI
 
 ```
-╔═╗ 
-╠╦╝ une
-╩╚═ 
+██▀▀▀ █   █ █▀▀█ ██▀▀
+██▀▀▀ █   █ █  █ █▀▀▀
+██    █   █ █  █ █   
+██    █████ █  █ ████
 ```
 
 **Ancient wisdom for modern workflows**

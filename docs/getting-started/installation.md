@@ -72,9 +72,12 @@ rune --version
 
 You should see:
 ```
-╔═╗ 
-╠╦╝ une version x.x.x
-╩╚═ 
+██▀▀▀ █   █ █▀▀█ ██▀▀
+██▀▀▀ █   █ █  █ █▀▀▀
+██    █   █ █  █ █   
+██    █████ █  █ ████
+
+version x.x.x
 ```
 
 ## Shell Completions

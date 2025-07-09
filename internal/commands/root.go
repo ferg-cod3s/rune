@@ -19,9 +19,10 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "rune",
 	Short: "Ancient wisdom for modern workflows",
-	Long: `╔═╗ 
-╠╦╝ une
-╩╚═ 
+	Long: `██▀▀▀ █   █ █▀▀█ ██▀▀
+██▀▀▀ █   █ █  █ █▀▀▀
+██    █   █ █  █ █   
+██    █████ █  █ ████
 
 Rune is a developer-first CLI productivity platform that automates daily work 
 rituals, enforces healthy work-life boundaries, and integrates seamlessly 
@@ -40,9 +41,12 @@ func init() {
 	cobra.OnInitialize(initConfig, initTelemetry)
 
 	// Custom version template with logo
-	rootCmd.SetVersionTemplate(`╔═╗ 
-╠╦╝ une version {{.Version}}
-╩╚═ 
+	rootCmd.SetVersionTemplate(`██▀▀▀ █   █ █▀▀█ ██▀▀
+██▀▀▀ █   █ █  █ █▀▀▀
+██    █   █ █  █ █   
+██    █████ █  █ ████
+
+version {{.Version}}
 
 `)
 
