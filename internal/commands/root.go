@@ -19,10 +19,11 @@ var (
 var rootCmd = &cobra.Command{
 	Use:   "rune",
 	Short: "Ancient wisdom for modern workflows",
-	Long: `██▀▀█ █   █ █▀▀█ ██▀▀
-██▀▀  █   █ █  █ █▀▀▀
-██ ██ █   █ █  █ █   
-██  █ █████ █  █ ████
+	Long: ` ______     __  __     __   __     ______   
+/\  == \   /\ \/\ \   /\ "-.\ \   /\  ___\  
+\ \  __<   \ \ \_\ \  \ \ \-.  \  \ \  __\  
+ \ \_\ \_\  \ \_____\  \ \_\\"\_\  \ \_____\
+  \/_/ /_/   \/_____/   \/_/ \/_/   \/_____/ 
 
 Rune is a developer-first CLI productivity platform that automates daily work 
 rituals, enforces healthy work-life boundaries, and integrates seamlessly 
@@ -41,10 +42,11 @@ func init() {
 	cobra.OnInitialize(initConfig, initTelemetry)
 
 	// Custom version template with logo
-	rootCmd.SetVersionTemplate(`██▀▀█ █   █ █▀▀█ ██▀▀
-██▀▀  █   █ █  █ █▀▀▀
-██ ██ █   █ █  █ █   
-██  █ █████ █  █ ████
+	rootCmd.SetVersionTemplate(` ______     __  __     __   __     ______   
+/\  == \   /\ \/\ \   /\ "-.\ \   /\  ___\  
+\ \  __<   \ \ \_\ \  \ \ \-.  \  \ \  __\  
+ \ \_\ \_\  \ \_____\  \ \_\\"\_\  \ \_____\
+  \/_/ /_/   \/_____/   \/_/ \/_/   \/_____/ 
 
 version {{.Version}}
 

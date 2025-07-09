@@ -61,12 +61,16 @@ func runInit(cmd *cobra.Command, args []string) error {
 }
 
 func runGuidedInit(configPath string) error {
-	fmt.Println("██▀▀█ █   █ █▀▀█ ██▀▀")
-	fmt.Println("██▀▀  █   █ █  █ █▀▀▀")
-	fmt.Println("██ ██ █   █ █  █ █   ")
-	fmt.Println("██  █ █████ █  █ ████")
+	// Special ceremonial runic logo for initialization
+	fmt.Println("|~\\  |\\      |   |\\    /|")
+	fmt.Println("|  \\ | \\   \\ |   | \\  / |")
+	fmt.Println("|  / |  \\   \\|   |  \\/  |")
+	fmt.Println("|_/  |   |   |\\  |      |")
+	fmt.Println("| \\  |   |   | \\ |      |")
+	fmt.Println("|  \\ |   |   |   |      |")
 	fmt.Println()
-	fmt.Println("Welcome to Rune! Let's cast your daily rituals.")
+	fmt.Println("🔮 Ancient runes awaken... Welcome to Rune!")
+	fmt.Println("Let's cast your daily rituals and bind your workflow.")
 	fmt.Println()
 
 	// Ask for telemetry opt-in
