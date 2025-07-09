@@ -463,7 +463,7 @@ func (t *Tracker) StartIdleMonitoring() error {
 			}
 
 			// Auto-pause due to idle
-			t.Pause()
+			_, _ = t.Pause()
 		},
 		func() {
 			// On idle end - could potentially resume, but we'll leave that manual

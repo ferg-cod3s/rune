@@ -15,7 +15,7 @@ func TestProjectDetector_DetectProject(t *testing.T) {
 	// Create a temporary directory for testing
 	tempDir := t.TempDir()
 	originalCwd, _ := os.Getwd()
-	defer os.Chdir(originalCwd)
+	defer func() { _ = os.Chdir(originalCwd) }()
 
 	t.Run("detects from package.json", func(t *testing.T) {
 		projectDir := filepath.Join(tempDir, "node-project")

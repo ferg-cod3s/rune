@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/getsentry/sentry-go"
 	"github.com/ferg-cod3s/rune/internal/config"
+	"github.com/getsentry/sentry-go"
 	"github.com/segmentio/analytics-go/v3"
 )
 
@@ -101,7 +101,7 @@ func (c *Client) Track(event string, properties map[string]interface{}) {
 	// Send to Segment if available
 	if c.segmentClient != nil {
 		go func() {
-			c.segmentClient.Enqueue(analytics.Track{
+			_ = c.segmentClient.Enqueue(analytics.Track{
 				UserId:     c.userID,
 				Event:      event,
 				Properties: properties,
@@ -250,7 +250,7 @@ func getUserID() string {
 	// Try to save it to config
 	if cfg != nil {
 		cfg.UserID = userID
-		config.SaveConfig(cfg) // Ignore errors
+		_ = config.SaveConfig(cfg) // Ignore errors
 	}
 
 	return userID
