@@ -6,7 +6,7 @@ BINARY_NAME=rune
 MAIN_PATH=./cmd/rune
 BUILD_DIR=./bin
 VERSION?=dev
-LDFLAGS=-ldflags "-X github.com/johnferguson/rune/internal/commands.version=$(VERSION) -X github.com/johnferguson/rune/internal/telemetry.segmentWriteKey=$(RUNE_SEGMENT_WRITE_KEY) -X github.com/johnferguson/rune/internal/telemetry.sentryDSN=$(RUNE_SENTRY_DSN)"
+LDFLAGS=-ldflags "-X github.com/ferg-cod3s/rune/internal/commands.version=$(VERSION) -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey=$(RUNE_SEGMENT_WRITE_KEY) -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN=$(RUNE_SENTRY_DSN)"
 
 # Default target
 all: build

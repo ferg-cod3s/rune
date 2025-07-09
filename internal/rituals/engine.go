@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/johnferguson/rune/internal/config"
+	"github.com/ferg-cod3s/rune/internal/config"
 )
 
 // Engine handles ritual execution

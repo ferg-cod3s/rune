@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/johnferguson/rune/internal/config"
+	"github.com/ferg-cod3s/rune/internal/config"
 	"github.com/spf13/cobra"
 )
 

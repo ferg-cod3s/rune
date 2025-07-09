@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnferguson/rune/internal/config"
-	"github.com/johnferguson/rune/internal/telemetry"
+	"github.com/ferg-cod3s/rune/internal/config"
+	"github.com/ferg-cod3s/rune/internal/telemetry"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

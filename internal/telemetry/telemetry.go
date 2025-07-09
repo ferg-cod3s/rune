@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/getsentry/sentry-go"
-	"github.com/johnferguson/rune/internal/config"
+	"github.com/ferg-cod3s/rune/internal/config"
 	"github.com/segmentio/analytics-go/v3"
 )
 

@@ -3,9 +3,9 @@ package commands
 import (
 	"fmt"
 
-	"github.com/johnferguson/rune/internal/config"
-	"github.com/johnferguson/rune/internal/rituals"
-	"github.com/johnferguson/rune/internal/tracking"
+	"github.com/ferg-cod3s/rune/internal/config"
+	"github.com/ferg-cod3s/rune/internal/rituals"
+	"github.com/ferg-cod3s/rune/internal/tracking"
 	"github.com/spf13/cobra"
 )
 

@@ -17,7 +17,7 @@ builds:
       - amd64
       - arm64
     ldflags:
-      - -s -w -X github.com/johnferguson/rune/internal/commands.version={{.Version}} -X github.com/johnferguson/rune/internal/telemetry.segmentWriteKey={{.Env.RUNE_SEGMENT_WRITE_KEY}} -X github.com/johnferguson/rune/internal/telemetry.sentryDSN={{.Env.RUNE_SENTRY_DSN}}
+      - -s -w -X github.com/ferg-cod3s/rune/internal/commands.version={{.Version}} -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey={{.Env.RUNE_SEGMENT_WRITE_KEY}} -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN={{.Env.RUNE_SENTRY_DSN}}
 
 archives:
   - format: tar.gz
@@ -52,7 +52,7 @@ changelog:
 # Homebrew tap disabled for alpha release
 # brews:
 #   - name: rune
-#     homepage: https://github.com/johnferguson/rune
+#     homepage: https://github.com/ferg-cod3s/rune
 #     description: "A productivity CLI tool for developers"
 #     license: MIT
 #     repository:
@@ -69,7 +69,7 @@ changelog:
 
 nfpms:
   - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-    homepage: https://github.com/johnferguson/rune
+    homepage: https://github.com/ferg-cod3s/rune
     description: A productivity CLI tool for developers
     maintainer: John Ferguson <your-email@example.com>
     license: MIT

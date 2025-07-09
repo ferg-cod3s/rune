@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/johnferguson/rune/internal/commands"
+	"github.com/ferg-cod3s/rune/internal/commands"
 )
 
 func main() {

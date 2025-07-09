@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/johnferguson/rune/internal/tracking"
+	"github.com/ferg-cod3s/rune/internal/tracking"
 	"github.com/spf13/cobra"
 )
 

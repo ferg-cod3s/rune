@@ -1,4 +1,4 @@
-module github.com/johnferguson/rune
+module github.com/ferg-cod3s/rune
 
 go 1.24.4
 
@@ -12,7 +12,6 @@ require (
 )
 
 require (
-	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
