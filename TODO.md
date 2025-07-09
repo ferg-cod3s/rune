@@ -33,11 +33,17 @@
   - [ ] Export to CSV/JSON formats
   - [ ] Terminal-based visualization
 
-- [ ] **Shell Completions**
+- [ ] **Shell Completions & CLI Polish**
   - [ ] Bash completion scripts
   - [ ] Zsh completion scripts
   - [ ] Fish completion scripts
   - [ ] PowerShell completion scripts
+  - [ ] **CLI Visual Enhancements**
+    - [ ] Add Rune ASCII logo to --version output
+    - [ ] Add logo to help command header
+    - [ ] Implement colored output with theme support
+    - [ ] Add progress bars for long-running operations
+    - [ ] Implement interactive prompts with validation
 
 ### CLI Interface
 - [ ] **Command Structure Implementation**
@@ -82,11 +88,34 @@
   - [ ] End-to-end testing framework
   - [ ] Performance benchmarking
 
-- [ ] **Documentation**
-  - [ ] Complete API documentation
-  - [ ] Tutorial series for common use cases
-  - [ ] Video guides for setup and configuration
-  - [ ] Community cookbook with examples
+- [ ] **Documentation & User Experience**
+  - [ ] **Documentation Site Setup**
+    - [ ] Set up docs.rune.dev with static site generator (Hugo/Docusaurus)
+    - [ ] Configure custom domain and SSL
+    - [ ] Set up automated deployment from main branch
+    - [ ] Implement search functionality
+  - [ ] **Core Documentation**
+    - [ ] Complete API documentation with examples
+    - [ ] Installation guide for all platforms
+    - [ ] Configuration reference with all options
+    - [ ] Command reference with usage examples
+    - [ ] Troubleshooting guide and FAQ
+  - [ ] **User Guides & Tutorials**
+    - [ ] Getting started tutorial (5-minute setup)
+    - [ ] Tutorial series for common developer workflows
+    - [ ] Advanced configuration examples
+    - [ ] Integration guides (Git, Slack, Calendar)
+    - [ ] Migration guides from Watson/Timewarrior
+  - [ ] **Visual Documentation**
+    - [ ] Video guides for setup and configuration
+    - [ ] Animated GIFs for key features
+    - [ ] Screenshots for all major commands
+    - [ ] Interactive CLI demos
+  - [ ] **Community Resources**
+    - [ ] Community cookbook with workflow examples
+    - [ ] Best practices guide
+    - [ ] Contributing guidelines for documentation
+    - [ ] Template configurations for different roles
 
 ## Low Priority (P2) - Nice to Have
 

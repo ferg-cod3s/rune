@@ -39,6 +39,13 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig, initTelemetry)
 
+	// Custom version template with logo
+	rootCmd.SetVersionTemplate(`╔═╗ 
+╠╦╝ une version {{.Version}}
+╩╚═ 
+
+`)
+
 	// Global flags
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.rune/config.yaml)")
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
