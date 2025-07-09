@@ -25,6 +25,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [0.1.0-alpha.3] - 2025-01-09
+
+### Added
+- **Comprehensive Test Coverage**: Added test files for commands, dnd, rituals, and telemetry modules
+- **Update Command**: Implemented self-update functionality with version checking and binary replacement
+- **Build Automation**: Added Sentry release automation script
+- **Uninstall Script**: Added clean removal script for complete uninstallation
+- **Enhanced Installation**: Improved install.sh with better error handling and validation
+
+### Changed
+- **Build Configuration**: Updated GoReleaser and GitHub Actions workflow
+- **Documentation**: Enhanced README with updated installation and usage instructions
+- **Telemetry**: Improved telemetry middleware and functionality
+
+### Fixed
+- **Build Process**: Resolved build configuration issues and ensured all tests pass
+- **Module Dependencies**: Updated Go module dependencies for better compatibility
+
 ## [0.1.0-alpha.1] - 2025-01-09
 
 ### Added
