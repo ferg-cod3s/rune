@@ -50,7 +50,7 @@ changelog:
       - '^docs:'
       - '^test:'
 
-brews:
+homebrew:
   - name: rune
     homepage: https://github.com/ferg-cod3s/rune
     description: "Ancient wisdom for modern workflows - A developer-first CLI productivity platform"
