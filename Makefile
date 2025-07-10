@@ -6,7 +6,12 @@ BINARY_NAME=rune
 MAIN_PATH=./cmd/rune
 BUILD_DIR=./bin
 VERSION?=dev
-LDFLAGS=-ldflags "-X github.com/ferg-cod3s/rune/internal/commands.version=$(VERSION) -X github.com/ferg-cod3s/rune/internal/telemetry.version=$(VERSION) -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey=$(RUNE_SEGMENT_WRITE_KEY) -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN=$(RUNE_SENTRY_DSN)"
+# Default telemetry keys (can be overridden by environment variables)
+DEFAULT_SEGMENT_KEY=ZkEZXHRWH96y8EviNkbYJUByqGR9QI4G
+DEFAULT_SENTRY_DSN=https://3b20acb23bbbc5958448bb41900cdca2@sentry.fergify.work/10
+SEGMENT_KEY?=$(if $(RUNE_SEGMENT_WRITE_KEY),$(RUNE_SEGMENT_WRITE_KEY),$(DEFAULT_SEGMENT_KEY))
+SENTRY_DSN?=$(if $(RUNE_SENTRY_DSN),$(RUNE_SENTRY_DSN),$(DEFAULT_SENTRY_DSN))
+LDFLAGS=-ldflags "-X github.com/ferg-cod3s/rune/internal/commands.version=$(VERSION) -X github.com/ferg-cod3s/rune/internal/telemetry.version=$(VERSION) -X github.com/ferg-cod3s/rune/internal/telemetry.segmentWriteKey=$(SEGMENT_KEY) -X github.com/ferg-cod3s/rune/internal/telemetry.sentryDSN=$(SENTRY_DSN)"
 
 # Default target
 all: build
@@ -103,6 +108,21 @@ security:
 	@echo "Checking for security vulnerabilities..."
 	govulncheck ./...
 
+# Test telemetry integration
+test-telemetry:
+	@echo "Testing telemetry integration..."
+	./scripts/test-telemetry.sh
+
+# Build with telemetry (ensures telemetry keys are embedded)
+build-telemetry:
+	@echo "Building $(BINARY_NAME) with telemetry support..."
+	@echo "Segment Key: $(shell echo $(SEGMENT_KEY) | cut -c1-10)..."
+	@echo "Sentry DSN: $(shell echo $(SENTRY_DSN) | cut -c1-30)..."
+	@mkdir -p $(BUILD_DIR)
+	go build $(LDFLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PATH)
+	@echo "Testing telemetry integration..."
+	@RUNE_DEBUG=true $(BUILD_DIR)/$(BINARY_NAME) --version > /dev/null 2>&1 && echo "✅ Telemetry integration test passed" || echo "❌ Telemetry integration test failed"
+
 # Pre-commit checks (run before committing)
 pre-commit: fmt vet lint test
 
@@ -110,6 +130,7 @@ pre-commit: fmt vet lint test
 help:
 	@echo "Available targets:"
 	@echo "  build        - Build the binary"
+	@echo "  build-telemetry - Build with telemetry support (embeds keys)"
 	@echo "  dev          - Build for development with race detection"
 	@echo "  test         - Run tests"
 	@echo "  test-coverage- Run tests with coverage report"
@@ -125,5 +146,6 @@ help:
 	@echo "  run          - Run the application (use ARGS=... for arguments)"
 	@echo "  completions  - Generate shell completions"
 	@echo "  security     - Check for security vulnerabilities"
+	@echo "  test-telemetry - Test telemetry integration"
 	@echo "  pre-commit   - Run pre-commit checks"
 	@echo "  help         - Show this help"

@@ -92,6 +92,12 @@ func initTelemetry() {
 	segmentWriteKey := os.Getenv("RUNE_SEGMENT_WRITE_KEY")
 	sentryDSN := os.Getenv("RUNE_SENTRY_DSN")
 
+	if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: initTelemetry called\n")
+		fmt.Printf("DEBUG: Env Segment Key: %s\n", segmentWriteKey)
+		fmt.Printf("DEBUG: Env Sentry DSN: %s\n", sentryDSN)
+	}
+
 	// Try to load from config if environment variables are not set
 	if cfg, err := config.Load(); err == nil {
 		if segmentWriteKey == "" {
@@ -100,6 +106,15 @@ func initTelemetry() {
 		if sentryDSN == "" {
 			sentryDSN = cfg.Integrations.Telemetry.SentryDSN
 		}
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Config loaded - Segment: %s, Sentry: %s\n", cfg.Integrations.Telemetry.SegmentWriteKey, cfg.Integrations.Telemetry.SentryDSN)
+		}
+	} else if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Config load failed: %v\n", err)
+	}
+
+	if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Final keys - Segment: %s, Sentry: %s\n", segmentWriteKey, sentryDSN)
 	}
 
 	telemetry.Initialize(segmentWriteKey, sentryDSN)

@@ -24,6 +24,15 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 	// Check if telemetry is disabled via environment variable or config
 	enabled := os.Getenv("RUNE_TELEMETRY_DISABLED") != "true"
 
+	// Debug logging
+	if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Telemetry enabled: %v\n", enabled)
+		fmt.Printf("DEBUG: User Segment Key: %s\n", userSegmentKey)
+		fmt.Printf("DEBUG: User Sentry DSN: %s\n", userSentryDSN)
+		fmt.Printf("DEBUG: Build-time Segment Key: %s\n", segmentWriteKey)
+		fmt.Printf("DEBUG: Build-time Sentry DSN: %s\n", sentryDSN)
+	}
+
 	// Generate or load user ID (anonymous)
 	userID := getUserID()
 
@@ -38,6 +47,13 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 		finalSentryDSN = sentryDSN
 	}
 
+	// Debug logging for final values
+	if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Final Segment Key: %s\n", finalSegmentKey)
+		fmt.Printf("DEBUG: Final Sentry DSN: %s\n", finalSentryDSN)
+		fmt.Printf("DEBUG: User ID: %s\n", userID)
+	}
+
 	client := &Client{
 		enabled:       enabled,
 		userID:        userID,
@@ -47,12 +63,20 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 
 	// Initialize Segment client if enabled and write key provided
 	if enabled && finalSegmentKey != "" {
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Initializing Segment client with key: %s\n", finalSegmentKey)
+		}
 		segmentClient := analytics.New(finalSegmentKey)
 		client.segmentClient = segmentClient
+	} else if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Segment client not initialized - enabled: %v, key: %s\n", enabled, finalSegmentKey)
 	}
 
 	// Initialize Sentry if enabled and DSN provided
 	if enabled && finalSentryDSN != "" {
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Initializing Sentry with DSN: %s\n", finalSentryDSN)
+		}
 		err := sentry.Init(sentry.ClientOptions{
 			Dsn:              finalSentryDSN,
 			Environment:      getEnvironment(),
@@ -76,9 +100,16 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 			},
 		})
 		if err != nil {
+			if os.Getenv("RUNE_DEBUG") == "true" {
+				fmt.Printf("DEBUG: Sentry initialization failed: %v\n", err)
+			}
 			// Silently fail for telemetry initialization
 			client.sentryEnabled = false
+		} else if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Sentry initialized successfully\n")
 		}
+	} else if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Sentry not initialized - enabled: %v, DSN: %s\n", enabled, finalSentryDSN)
 	}
 
 	return client
@@ -86,7 +117,14 @@ func NewClient(userSegmentKey, userSentryDSN string) *Client {
 
 func (c *Client) Track(event string, properties map[string]interface{}) {
 	if !c.enabled {
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Telemetry disabled, not tracking event: %s\n", event)
+		}
 		return
+	}
+
+	if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Tracking event: %s\n", event)
 	}
 
 	// Add default properties
@@ -102,6 +140,9 @@ func (c *Client) Track(event string, properties map[string]interface{}) {
 
 	// Send to Segment if available
 	if c.segmentClient != nil {
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Sending to Segment: %s\n", event)
+		}
 		go func() {
 			_ = c.segmentClient.Enqueue(analytics.Track{
 				UserId:     c.userID,
@@ -110,10 +151,15 @@ func (c *Client) Track(event string, properties map[string]interface{}) {
 				Timestamp:  time.Now(),
 			})
 		}()
+	} else if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Segment client not available for event: %s\n", event)
 	}
 
 	// Send to Sentry as breadcrumb for context
 	if c.sentryEnabled {
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Adding Sentry breadcrumb: %s\n", event)
+		}
 		sentry.AddBreadcrumb(&sentry.Breadcrumb{
 			Message:   event,
 			Category:  "telemetry",
@@ -121,6 +167,8 @@ func (c *Client) Track(event string, properties map[string]interface{}) {
 			Data:      properties,
 			Timestamp: time.Now(),
 		})
+	} else if os.Getenv("RUNE_DEBUG") == "true" {
+		fmt.Printf("DEBUG: Sentry not enabled for event: %s\n", event)
 	}
 }
 
