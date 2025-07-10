@@ -3,7 +3,9 @@ package commands
 import (
 	"fmt"
 
+	"github.com/ferg-cod3s/rune/internal/config"
 	"github.com/ferg-cod3s/rune/internal/dnd"
+	"github.com/ferg-cod3s/rune/internal/notifications"
 	"github.com/ferg-cod3s/rune/internal/telemetry"
 	"github.com/ferg-cod3s/rune/internal/tracking"
 	"github.com/spf13/cobra"
@@ -88,7 +90,14 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check DND status
-	dndManager := dnd.NewDNDManager()
+	cfg, _ := config.Load()
+	var notificationEnabled bool
+	if cfg != nil {
+		notificationEnabled = cfg.Settings.Notifications.Enabled
+	}
+
+	nm := notifications.NewNotificationManager(notificationEnabled)
+	dndManager := dnd.NewDNDManager(nm)
 	dndEnabled, err := dndManager.IsEnabled()
 	if err != nil {
 		fmt.Println("Focus Mode:   Unknown (detection failed)")

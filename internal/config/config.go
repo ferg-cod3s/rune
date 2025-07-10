@@ -21,9 +21,20 @@ type Config struct {
 
 // Settings contains global application settings
 type Settings struct {
-	WorkHours     float64       `yaml:"work_hours" mapstructure:"work_hours"`
-	BreakInterval time.Duration `yaml:"break_interval" mapstructure:"break_interval"`
-	IdleThreshold time.Duration `yaml:"idle_threshold" mapstructure:"idle_threshold"`
+	WorkHours     float64              `yaml:"work_hours" mapstructure:"work_hours"`
+	BreakInterval time.Duration        `yaml:"break_interval" mapstructure:"break_interval"`
+	IdleThreshold time.Duration        `yaml:"idle_threshold" mapstructure:"idle_threshold"`
+	Notifications NotificationSettings `yaml:"notifications" mapstructure:"notifications"`
+}
+
+// NotificationSettings contains notification preferences
+type NotificationSettings struct {
+	Enabled           bool `yaml:"enabled" mapstructure:"enabled"`
+	BreakReminders    bool `yaml:"break_reminders" mapstructure:"break_reminders"`
+	EndOfDayReminders bool `yaml:"end_of_day_reminders" mapstructure:"end_of_day_reminders"`
+	SessionComplete   bool `yaml:"session_complete" mapstructure:"session_complete"`
+	IdleDetection     bool `yaml:"idle_detection" mapstructure:"idle_detection"`
+	Sound             bool `yaml:"sound" mapstructure:"sound"`
 }
 
 // Project represents a project configuration

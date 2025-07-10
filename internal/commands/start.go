@@ -5,6 +5,7 @@ import (
 
 	"github.com/ferg-cod3s/rune/internal/config"
 	"github.com/ferg-cod3s/rune/internal/dnd"
+	"github.com/ferg-cod3s/rune/internal/notifications"
 	"github.com/ferg-cod3s/rune/internal/rituals"
 	"github.com/ferg-cod3s/rune/internal/telemetry"
 	"github.com/ferg-cod3s/rune/internal/tracking"
@@ -99,7 +100,14 @@ func runStart(cmd *cobra.Command, args []string) error {
 	}
 
 	// Check and enable Do Not Disturb if configured
-	dndManager := dnd.NewDNDManager()
+	// Create notification manager based on config
+	var notificationEnabled bool
+	if cfg != nil {
+		notificationEnabled = cfg.Settings.Notifications.Enabled
+	}
+
+	nm := notifications.NewNotificationManager(notificationEnabled)
+	dndManager := dnd.NewDNDManager(nm)
 
 	// Check if shortcuts are properly set up
 	shortcutsReady, shortcutsErr := dndManager.CheckShortcutsSetup()

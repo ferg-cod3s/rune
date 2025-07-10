@@ -7,6 +7,13 @@ settings:
   work_hours: 8.0
   break_interval: 30m
   idle_threshold: 10m  # Longer threshold for deep work
+  notifications:
+    enabled: true
+    break_reminders: true
+    end_of_day_reminders: true
+    session_complete: false  # Developers might find this too noisy
+    idle_detection: true
+    sound: false  # Quieter for focus
 
 projects:
   - name: "frontend"

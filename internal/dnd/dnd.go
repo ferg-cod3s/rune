@@ -5,14 +5,21 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+	"time"
+
+	"github.com/ferg-cod3s/rune/internal/notifications"
 )
 
 // DNDManager handles Do Not Disturb functionality across platforms
-type DNDManager struct{}
+type DNDManager struct {
+	notificationManager *notifications.NotificationManager
+}
 
 // NewDNDManager creates a new DND manager
-func NewDNDManager() *DNDManager {
-	return &DNDManager{}
+func NewDNDManager(notificationManager *notifications.NotificationManager) *DNDManager {
+	return &DNDManager{
+		notificationManager: notificationManager,
+	}
 }
 
 // Enable enables Do Not Disturb mode
@@ -386,6 +393,46 @@ func (d *DNDManager) checkShortcutsMacOS() (bool, error) {
 	}
 
 	return true, nil
+}
+
+// SendBreakNotification sends a break reminder notification
+func (d *DNDManager) SendBreakNotification(workDuration time.Duration) error {
+	if d.notificationManager == nil {
+		return nil
+	}
+	return d.notificationManager.SendBreakReminder(workDuration)
+}
+
+// SendEndOfDayNotification sends an end-of-day reminder notification
+func (d *DNDManager) SendEndOfDayNotification(totalTime time.Duration, targetHours float64) error {
+	if d.notificationManager == nil {
+		return nil
+	}
+	return d.notificationManager.SendEndOfDayReminder(totalTime, targetHours)
+}
+
+// SendSessionCompleteNotification sends a session completion notification
+func (d *DNDManager) SendSessionCompleteNotification(duration time.Duration, project string) error {
+	if d.notificationManager == nil {
+		return nil
+	}
+	return d.notificationManager.SendSessionComplete(duration, project)
+}
+
+// SendIdleNotification sends an idle detection notification
+func (d *DNDManager) SendIdleNotification(idleDuration time.Duration) error {
+	if d.notificationManager == nil {
+		return nil
+	}
+	return d.notificationManager.SendIdleDetected(idleDuration)
+}
+
+// TestNotifications sends a test notification to verify the system is working
+func (d *DNDManager) TestNotifications() error {
+	if d.notificationManager == nil {
+		return fmt.Errorf("notification manager not initialized")
+	}
+	return d.notificationManager.TestNotification()
 }
 
 // Helper function to get home directory

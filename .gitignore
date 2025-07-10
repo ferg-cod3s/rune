@@ -45,4 +45,4 @@ Thumbs.db
 
 # Config files with secrets (users should use .env instead)
 config.yaml
-.rune/config.yaml
+.rune/config.yamlhomebrew-tap/

@@ -7,6 +7,13 @@ settings:
   work_hours: 8.0
   break_interval: 25m  # Pomodoro-style breaks
   idle_threshold: 5m   # Auto-pause after 5 minutes of inactivity
+  notifications:
+    enabled: true
+    break_reminders: true
+    end_of_day_reminders: true
+    session_complete: true
+    idle_detection: true
+    sound: true
 
 projects:
   - name: "default"

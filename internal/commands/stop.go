@@ -5,6 +5,7 @@ import (
 
 	"github.com/ferg-cod3s/rune/internal/config"
 	"github.com/ferg-cod3s/rune/internal/dnd"
+	"github.com/ferg-cod3s/rune/internal/notifications"
 	"github.com/ferg-cod3s/rune/internal/rituals"
 	"github.com/ferg-cod3s/rune/internal/telemetry"
 	"github.com/ferg-cod3s/rune/internal/tracking"
@@ -69,7 +70,13 @@ func runStop(cmd *cobra.Command, args []string) error {
 	}
 
 	// Disable Do Not Disturb
-	dndManager := dnd.NewDNDManager()
+	var notificationEnabled bool
+	if cfg != nil {
+		notificationEnabled = cfg.Settings.Notifications.Enabled
+	}
+
+	nm := notifications.NewNotificationManager(notificationEnabled)
+	dndManager := dnd.NewDNDManager(nm)
 	if err := dndManager.Disable(); err != nil {
 		fmt.Printf("⚠ Could not disable Do Not Disturb: %v\n", err)
 	} else {
