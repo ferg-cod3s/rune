@@ -266,10 +266,16 @@ func downloadAndInstall(url, version string) error {
 		}
 		if err := copyFile(newBinaryPath, currentExe); err != nil {
 			// Try to restore backup
-			os.Rename(backupPath, currentExe)
+			if restoreErr := os.Rename(backupPath, currentExe); restoreErr != nil {
+				// Log the restore error but return the original error
+				fmt.Fprintf(os.Stderr, "Warning: failed to restore backup: %v\n", restoreErr)
+			}
 			return err
 		}
-		os.Remove(backupPath)
+		if err := os.Remove(backupPath); err != nil {
+			// Log warning but don't fail the update
+			fmt.Fprintf(os.Stderr, "Warning: failed to remove backup file: %v\n", err)
+		}
 	} else {
 		if err := copyFile(newBinaryPath, currentExe); err != nil {
 			return err
@@ -290,7 +296,9 @@ func extractZip(src, dest string) error {
 		path := filepath.Join(dest, f.Name)
 
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(path, f.FileInfo().Mode())
+			if err := os.MkdirAll(path, f.FileInfo().Mode()); err != nil {
+				return err
+			}
 			continue
 		}
 
