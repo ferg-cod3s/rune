@@ -143,14 +143,15 @@ func (c *Client) Track(event string, properties map[string]interface{}) {
 		if os.Getenv("RUNE_DEBUG") == "true" {
 			fmt.Printf("DEBUG: Sending to Segment: %s\n", event)
 		}
-		go func() {
-			_ = c.segmentClient.Enqueue(analytics.Track{
-				UserId:     c.userID,
-				Event:      event,
-				Properties: properties,
-				Timestamp:  time.Now(),
-			})
-		}()
+		err := c.segmentClient.Enqueue(analytics.Track{
+			UserId:     c.userID,
+			Event:      event,
+			Properties: properties,
+			Timestamp:  time.Now(),
+		})
+		if err != nil && os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Segment enqueue error: %v\n", err)
+		}
 	} else if os.Getenv("RUNE_DEBUG") == "true" {
 		fmt.Printf("DEBUG: Segment client not available for event: %s\n", event)
 	}
@@ -238,10 +239,17 @@ func (c *Client) TrackCommand(command string, duration time.Duration, success bo
 
 func (c *Client) Close() {
 	if c.segmentClient != nil {
+		// Flush any pending events before closing
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Flushing Segment events before close\n")
+		}
 		c.segmentClient.Close()
 	}
 	if c.sentryEnabled {
-		sentry.Flush(2 * time.Second)
+		if os.Getenv("RUNE_DEBUG") == "true" {
+			fmt.Printf("DEBUG: Flushing Sentry events before close\n")
+		}
+		sentry.Flush(5 * time.Second) // Increased timeout for better reliability
 	}
 }
 

@@ -39,6 +39,7 @@ func Track(event string, properties map[string]interface{}) {
 func Close() {
 	if globalClient != nil {
 		globalClient.Close()
+		globalClient = nil
 	}
 }
 
