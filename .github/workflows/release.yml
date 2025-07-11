@@ -30,15 +30,23 @@ jobs:
     - name: Run tests
       run: go test -v ./...
 
-    # - name: Create Sentry Release
-    #   uses: getsentry/action-release@v1
-    #   env:
-    #      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    #      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-    #      SENTRY_PROJECT: rune
-    #   with:
-    #      environment: production
-    #      version: ${{ github.ref_name }}
+    - name: Create Sentry Release
+      uses: getsentry/action-release@v1
+      env:
+         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+         SENTRY_PROJECT: rune
+      with:
+         environment: production
+         version: ${{ github.ref_name }}
+
+    - name: Generate GitHub App token
+      id: app-token
+      uses: tibdex/github-app-token@v2
+      with:
+        app_id: ${{ secrets.HOMEBREW_APP_ID }}
+        installation_id: ${{ secrets.HOMEBREW_APP_INSTALLATION_ID }}
+        private_key: ${{ secrets.HOMEBREW_APP_PRIVATE_KEY }}
 
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
@@ -47,18 +55,17 @@ jobs:
         version: v2.11.0
         args: release --clean
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        HOMEBREW_TAP_PAT: ${{ secrets.HOMEBREW_TAP_PAT }}
+        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
         RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
 
-    # - name: Finalize Sentry Release
-    #   uses: getsentry/action-release@v1
-    #   env:
-    #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-    #     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-    #     SENTRY_PROJECT: rune
-    #   with:
-    #     environment: production
-    #     version: ${{ github.ref_name }}
-    #     finalize: true
+    - name: Finalize Sentry Release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: rune
+      with:
+        environment: production
+        version: ${{ github.ref_name }}
+        finalize: true
