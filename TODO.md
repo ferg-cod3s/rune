@@ -120,6 +120,13 @@
 ## Low Priority (P2) - Nice to Have
 
 ### Future Enhancements
+- [ ] **Programmatic Shortcut Management**
+  - [ ] Auto-detect existing desktop/menu shortcuts
+  - [ ] One-time prompt for shortcut creation during install
+  - [ ] Cross-platform shortcut creation (macOS .webloc, Windows .lnk, Linux .desktop)
+  - [ ] Update shortcuts when binary location changes
+  - [ ] User preference storage for shortcut management
+
 - [ ] **AI-Powered Features**
   - [ ] Smart ritual suggestions based on usage patterns
   - [ ] Productivity optimization recommendations
