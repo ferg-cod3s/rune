@@ -40,14 +40,6 @@ jobs:
          environment: production
          version: ${{ github.ref_name }}
 
-    - name: Generate GitHub App token
-      id: app-token
-      uses: tibdex/github-app-token@v2
-      with:
-        app_id: ${{ secrets.HOMEBREW_APP_ID }}
-        installation_id: ${{ secrets.HOMEBREW_APP_INSTALLATION_ID }}
-        private_key: ${{ secrets.HOMEBREW_APP_PRIVATE_KEY }}
-
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
       with:
@@ -55,7 +47,7 @@ jobs:
         version: v2.11.0
         args: release --clean
       env:
-        GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
         RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
 
