@@ -46,11 +46,11 @@ jobs:
         distribution: goreleaser
         version: v2.11.0
         args: release --clean
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-         HOMEBREW_TAP_PAT: ${{ secrets.GITHUB_TOKEN }}
-         RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
-         RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        HOMEBREW_TAP_PAT: ${{ secrets.GITHUB_TOKEN }}
+        RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
+        RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
     - name: Finalize Sentry Release
       uses: getsentry/action-release@v1
       env:
