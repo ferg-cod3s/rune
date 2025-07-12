@@ -42,7 +42,7 @@ func TestSegmentIntegration(t *testing.T) {
 
 		receivedEvents = append(receivedEvents, event)
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"success": true}`))
+		_, _ = w.Write([]byte(`{"success": true}`))
 	}))
 	defer server.Close()
 
