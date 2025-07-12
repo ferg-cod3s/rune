@@ -126,6 +126,65 @@ build-telemetry:
 # Pre-commit checks (run before committing)
 pre-commit: fmt vet lint test
 
+# Security targets
+security-deps:
+	@echo "Checking dependencies for vulnerabilities..."
+	go install github.com/sonatypecommunity/nancy@latest
+	go list -json -deps ./... | nancy sleuth --loud
+
+security-vulns:
+	@echo "Checking for known vulnerabilities..."
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck ./...
+
+security-static:
+	@echo "Running static security analysis..."
+	go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+	gosec ./...
+
+security-secrets:
+	@echo "Scanning for secrets..."
+	@if command -v trufflehog >/dev/null 2>&1; then \
+		trufflehog filesystem . --exclude-paths .trufflehogignore; \
+	else \
+		echo "TruffleHog not installed, skipping secret scan"; \
+	fi
+
+security-build:
+	@echo "Checking binary for embedded secrets..."
+	@if [ -f "./bin/rune" ]; then \
+		if strings ./bin/rune | grep -E "(password|secret|key|token)" | grep -v -E "(segmentWriteKey|sentryDSN|RUNE_)" ; then \
+			echo "❌ Potential secrets found in binary"; \
+			exit 1; \
+		else \
+			echo "✅ No obvious secrets found in binary"; \
+		fi \
+	else \
+		echo "Binary not found, run 'make build' first"; \
+		exit 1; \
+	fi
+
+security-all: security-deps security-vulns security-static security-secrets
+	@echo "✅ All security checks completed"
+
+# Enhanced coverage with thresholds
+test-coverage-detailed:
+	@echo "Running tests with detailed coverage..."
+	go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+	go tool cover -html=coverage.out -o coverage.html
+	@COVERAGE=$$(go tool cover -func=coverage.out | grep total | awk '{print $$3}' | sed 's/%//'); \
+	echo "Total coverage: $$COVERAGE%"; \
+	if [ $$(echo "$$COVERAGE < 70" | bc -l) -eq 1 ]; then \
+		echo "❌ Coverage $$COVERAGE% is below 70% threshold"; \
+		exit 1; \
+	else \
+		echo "✅ Coverage $$COVERAGE% meets threshold"; \
+	fi
+
+# Enhanced pre-commit with security
+pre-commit-security: fmt vet lint test security-static security-vulns
+	@echo "✅ Pre-commit security checks passed"
+
 # Help
 help:
 	@echo "Available targets:"
@@ -134,6 +193,7 @@ help:
 	@echo "  dev          - Build for development with race detection"
 	@echo "  test         - Run tests"
 	@echo "  test-coverage- Run tests with coverage report"
+	@echo "  test-coverage-detailed - Run tests with detailed coverage and thresholds"
 	@echo "  test-watch   - Run tests in watch mode"
 	@echo "  lint         - Run linter"
 	@echo "  fmt          - Format code"
@@ -146,6 +206,13 @@ help:
 	@echo "  run          - Run the application (use ARGS=... for arguments)"
 	@echo "  completions  - Generate shell completions"
 	@echo "  security     - Check for security vulnerabilities"
+	@echo "  security-deps - Check dependencies for vulnerabilities"
+	@echo "  security-vulns - Check for known vulnerabilities"
+	@echo "  security-static - Run static security analysis"
+	@echo "  security-secrets - Scan for secrets"
+	@echo "  security-build - Check binary for embedded secrets"
+	@echo "  security-all - Run all security checks"
 	@echo "  test-telemetry - Test telemetry integration"
 	@echo "  pre-commit   - Run pre-commit checks"
+	@echo "  pre-commit-security - Run pre-commit checks with security"
 	@echo "  help         - Show this help"

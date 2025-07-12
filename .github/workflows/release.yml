@@ -40,6 +40,14 @@ jobs:
          environment: production
          version: ${{ github.ref_name }}
 
+    - name: Generate Homebrew App Token
+      id: homebrew-app-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ secrets.HOMEBREW_APP_ID }}
+        private-key: ${{ secrets.HOMEBREW_APP_PRIVATE_KEY }}
+        installation-id: ${{ secrets.HOMEBREW_APP_INSTALLATION_ID }}
+
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
       with:
@@ -48,7 +56,7 @@ jobs:
         args: release --clean
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        HOMEBREW_TAP_PAT: ${{ secrets.GITHUB_TOKEN }}
+        HOMEBREW_TAP_PAT: ${{ steps.homebrew-app-token.outputs.token }}
         RUNE_SEGMENT_WRITE_KEY: ${{ secrets.RUNE_SEGMENT_WRITE_KEY }}
         RUNE_SENTRY_DSN: ${{ secrets.RUNE_SENTRY_DSN }}
     - name: Finalize Sentry Release

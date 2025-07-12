@@ -128,13 +128,52 @@ func (nm *NotificationManager) SendIdleDetected(idleDuration time.Duration) erro
 	return nm.Send(notification)
 }
 
-// macOS implementation using osascript
+// macOS implementation using terminal-notifier (fallback to osascript)
 func (nm *NotificationManager) sendMacOS(notification Notification) error {
+	// Try terminal-notifier first (more reliable)
+	if nm.tryTerminalNotifier(notification) == nil {
+		return nil
+	}
+
+	// Fallback to osascript
 	script := fmt.Sprintf(`
 display notification "%s" with title "%s" sound name "%s"
 `, notification.Message, notification.Title, nm.getSoundName(notification))
 
 	cmd := exec.Command("osascript", "-e", script)
+	return cmd.Run()
+}
+
+// tryTerminalNotifier attempts to use terminal-notifier for macOS notifications
+func (nm *NotificationManager) tryTerminalNotifier(notification Notification) error {
+	args := []string{
+		"-title", notification.Title,
+		"-message", notification.Message,
+	}
+
+	// Add priority-based arguments to bypass DND for important notifications
+	switch notification.Type {
+	case BreakReminder, EndOfDayReminder:
+		// Critical notifications that should bypass DND
+		args = append(args, "-timeout", "30") // Stay visible longer
+		args = append(args, "-ignoreDnD")     // Bypass Do Not Disturb
+		if notification.Sound {
+			args = append(args, "-sound", "Basso") // More attention-grabbing sound
+		}
+	case IdleDetected:
+		// Important but less urgent
+		args = append(args, "-timeout", "15")
+		if notification.Sound {
+			args = append(args, "-sound", nm.getSoundName(notification))
+		}
+	default:
+		// Normal notifications
+		if notification.Sound {
+			args = append(args, "-sound", nm.getSoundName(notification))
+		}
+	}
+
+	cmd := exec.Command("terminal-notifier", args...)
 	return cmd.Run()
 }
 
