@@ -46,7 +46,8 @@ jobs:
       with:
         app-id: ${{ secrets.HOMEBREW_APP_ID }}
         private-key: ${{ secrets.HOMEBREW_APP_PRIVATE_KEY }}
-        installation-id: ${{ secrets.HOMEBREW_APP_INSTALLATION_ID }}
+        owner: ferg-cod3s
+        repositories: homebrew-tap
 
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
