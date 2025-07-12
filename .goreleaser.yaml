@@ -50,7 +50,7 @@ changelog:
       - '^docs:'
       - '^test:'
 
-homebrew:
+homebrew_casks:
   - name: rune
     homepage: https://github.com/ferg-cod3s/rune
     description: "Ancient wisdom for modern workflows - A developer-first CLI productivity platform"
@@ -67,12 +67,12 @@ homebrew:
     commit_message_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
     install: |
       bin.install "rune"
-      
+
       # Install shell completions
       bash_completion.install "completions/rune.bash" => "rune"
       zsh_completion.install "completions/rune.zsh" => "_rune"
       fish_completion.install "completions/rune.fish"
-      
+
       # Create default config directory
       (etc/"rune").mkpath
     test: |
@@ -87,9 +87,9 @@ homebrew:
         2. Start your workday: rune start
         3. Check status: rune status
         4. End your workday: rune stop
-      
+
       Configuration file location: ~/.rune/config.yaml
-      
+
       For more information, visit: https://github.com/ferg-cod3s/rune
 
 nfpms:

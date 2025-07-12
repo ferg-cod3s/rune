@@ -16,7 +16,7 @@ The notification system supports several types of notifications:
 
 Notifications are supported on:
 
-- **macOS**: Uses `osascript` for native notification center integration
+- **macOS**: Uses `terminal-notifier` (preferred) with fallback to `osascript` for native notification center integration
 - **Linux**: Uses `notify-send` for desktop environment notifications
 - **Windows**: Uses PowerShell and Windows Toast notifications
 
@@ -104,8 +104,15 @@ The notification system is integrated with Rune's DND functionality:
 
 ### macOS Specific Issues
 
-- Grant notification permissions in System Preferences > Security & Privacy > Privacy > Notifications
-- If using Terminal, ensure Terminal has notification permissions
+- Grant notification permissions in System Settings > Notifications
+- If using Terminal/Ghostty, ensure your terminal has notification permissions
+- **Focus Mode Configuration**: If using Focus/Do Not Disturb mode, add your terminal application (Terminal, iTerm2, Ghostty, etc.) to the allowed apps list:
+  1. Go to System Settings > Focus
+  2. Select your Focus mode (Do Not Disturb, Work, etc.)
+  3. Under "Allowed Notifications" click "Apps"
+  4. Add your terminal application to the list
+  5. Restart your terminal application for changes to take effect
+- For optimal notification delivery, install `terminal-notifier`: `brew install terminal-notifier`
 
 ### Linux Specific Issues
 
