@@ -35,6 +35,8 @@ Cast your daily runes and master your workflow.`,
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 func Execute() error {
+	// Ensure telemetry is properly closed on exit
+	defer telemetry.Close()
 	return rootCmd.Execute()
 }
 
