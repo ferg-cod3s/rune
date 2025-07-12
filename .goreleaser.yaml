@@ -50,7 +50,7 @@ changelog:
       - '^docs:'
       - '^test:'
 
-brews:
+homebrew:
   - name: rune
     homepage: https://github.com/ferg-cod3s/rune
     description: "Ancient wisdom for modern workflows - A developer-first CLI productivity platform"
@@ -64,7 +64,7 @@ brews:
     commit_author:
       name: goreleaserbot
       email: bot@goreleaser.com
-    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_message_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
     install: |
       bin.install "rune"
       
