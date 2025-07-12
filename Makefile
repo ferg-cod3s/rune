@@ -124,7 +124,13 @@ build-telemetry:
 	@RUNE_DEBUG=true $(BUILD_DIR)/$(BINARY_NAME) --version > /dev/null 2>&1 && echo "✅ Telemetry integration test passed" || echo "❌ Telemetry integration test failed"
 
 # Pre-commit checks (run before committing)
-pre-commit: fmt vet lint test
+# Validate GitHub Actions workflows
+validate-workflows:
+	@echo "Validating GitHub Actions workflows..."
+	@command -v actionlint >/dev/null 2>&1 || { echo "actionlint not found. Install with: brew install actionlint"; exit 1; }
+	@actionlint
+
+pre-commit: fmt vet lint test validate-workflows
 
 # Security targets
 security-deps:
@@ -182,7 +188,7 @@ test-coverage-detailed:
 	fi
 
 # Enhanced pre-commit with security
-pre-commit-security: fmt vet lint test security-static security-vulns
+pre-commit-security: fmt vet lint test validate-workflows security-static security-vulns
 	@echo "✅ Pre-commit security checks passed"
 
 # Help
