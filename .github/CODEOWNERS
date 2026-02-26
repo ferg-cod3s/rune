@@ -1,0 +1,27 @@
+# Global fallback
+* @v1truv1us
+
+# Core commands
+/cmd/ @v1truv1us
+
+# Ritual system
+/internal/ritual/ @v1truv1us
+
+# Time tracking
+/internal/time/ @v1truv1us
+
+# Project detection
+/internal/project/ @v1truv1us
+
+# Integrations (Git, Slack, Calendar)
+/internal/integrations/ @v1truv1us
+
+# Configuration
+/configs/ @v1truv1us
+
+# CI/CD
+/.github/workflows/ @v1truv1us
+
+# Documentation
+*.md @v1truv1us
+SECURITY.md @v1truv1us
