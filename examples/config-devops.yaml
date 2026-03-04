@@ -169,6 +169,6 @@ integrations:
     block_calendar: false  # Flexible for incident response
   telemetry:
     enabled: true  # Important for infrastructure monitoring
-    # Optional OpenTelemetry logs endpoint (prefer environment variable)
-    # otlp_endpoint: "http://localhost:4318/v1/logs"
+    # Use RUNE_SENTRY_DSN env var for Sentry DSN
+    # Use RUNE_OTLP_ENDPOINT env var for OpenTelemetry logs endpoint
     sentry_dsn: ""

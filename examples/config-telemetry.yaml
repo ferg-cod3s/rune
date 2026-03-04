@@ -48,10 +48,9 @@ integrations:
     enabled: true
     # IMPORTANT: Do not put secrets in this config file!
     # Instead, set these environment variables:
-    # - RUNE_OTLP_ENDPOINT: Your OTLP logs endpoint (e.g. http://localhost:4318/v1/logs)
     # - RUNE_SENTRY_DSN: Your Sentry DSN
-    # 
-    #     # You can also copy .env.example to .env and set values there
-    #     # The application will automatically use environment variables over config values
-    otlp_endpoint: ""  # Leave empty - use RUNE_OTLP_ENDPOINT env var
+    # - RUNE_OTLP_ENDPOINT: Your OTLP logs endpoint (e.g. http://localhost:4318/v1/logs)
+    #
+    # You can also copy .env.example to .env and set values there.
+    # The application will automatically use environment variables over config values.
     sentry_dsn: ""     # Leave empty - use RUNE_SENTRY_DSN env var

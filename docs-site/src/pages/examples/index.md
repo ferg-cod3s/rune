@@ -4,7 +4,7 @@ title: "Configuration Examples - Rune CLI | Real-World Workflows"
 description: "Real-world configuration examples for Rune CLI including frontend, backend, DevOps, and freelancer workflows. Copy and customize these proven productivity automation setups."
 image: "/og-examples.png"
 category: "Examples"
-lastModified: "2024-07-23T00:00:00Z"
+lastModified: "2025-03-04T00:00:00Z"
 ---
 
 ## Workflow Examples
@@ -31,7 +31,7 @@ lastModified: "2024-07-23T00:00:00Z"
   <div class="feature-card">
     <span class="emoji">💼</span>
     <h4>Freelancer/Consultant</h4>
-    <p>Time tracking focused with client project separation, hourly rate tracking, and automated invoicing.</p>
+    <p>Time tracking focused with client project separation and automated reporting.</p>
   </div>
 </div>
 
@@ -44,6 +44,7 @@ version: 1
 settings:
   work_hours: 8.0
   break_interval: 50m
+  idle_threshold: 10m
 
 projects:
   - name: "web-app"
@@ -66,8 +67,9 @@ rituals:
     global:
       - name: "Stop dev server"
         command: "pkill -f 'pnpm dev'"
+        optional: true
       - name: "Commit WIP"
-        command: "git add -A && git commit -m 'WIP: $(date)'"
+        command: "git add -A && git commit -m 'WIP: End of day'"
         optional: true
 
 integrations:
@@ -85,6 +87,7 @@ version: 1
 settings:
   work_hours: 8.0
   break_interval: 45m
+  idle_threshold: 10m
 
 projects:
   - name: "api-service"
@@ -97,14 +100,16 @@ rituals:
         command: "docker-compose up -d postgres redis"
       - name: "Run migrations"
         command: "go run migrate.go"
+        optional: true
       - name: "Start API server"
-        command: "air" # Hot reload for Go
+        command: "air"
         background: true
 
   stop:
     global:
       - name: "Stop API server"
         command: "pkill -f air"
+        optional: true
       - name: "Stop Docker services"
         command: "docker-compose down"
       - name: "Run tests"
@@ -121,6 +126,7 @@ version: 1
 settings:
   work_hours: 8.0
   break_interval: 60m
+  idle_threshold: 5m
 
 projects:
   - name: "infrastructure"
@@ -131,11 +137,12 @@ rituals:
     global:
       - name: "Check cluster status"
         command: "kubectl get nodes"
+        optional: true
       - name: "Check monitoring"
         command: "open https://grafana.company.com"
-      - name: "Update Terraform"
+      - name: "Review Terraform state"
         command: "terraform plan"
-        working_dir: "~/infra/terraform"
+        optional: true
 
   stop:
     global:
@@ -144,6 +151,15 @@ rituals:
         optional: true
       - name: "Generate report"
         command: "./scripts/daily-report.sh"
+        optional: true
+
+integrations:
+  git:
+    enabled: true
+    auto_detect_project: true
+  slack:
+    workspace: "devops-team"
+    dnd_on_start: false
 ```
 
 ### Freelancer/Consultant
@@ -155,30 +171,28 @@ version: 1
 settings:
   work_hours: 6.0
   break_interval: 45m
+  idle_threshold: 5m
 
 projects:
   - name: "client-acme"
     detect: ["dir:~/clients/acme"]
-    client: "Acme Corp"
-    rate: 150.00
 
   - name: "client-beta"
     detect: ["dir:~/clients/beta"]
-    client: "Beta Inc"
-    rate: 175.00
 
 rituals:
   start:
     global:
       - name: "Time tracking reminder"
-        command: "echo 'Starting work for {{project}} at ${{rate}}/hr'"
+        command: "echo 'Starting work session...'"
 
   stop:
     global:
-      - name: "Log time entry"
-        command: "rune report --today --project {{project}} --format csv >> ~/invoices/{{client}}-$(date +%Y-%m).csv"
+      - name: "Export time report"
+        command: "rune report --today --format csv"
+        optional: true
       - name: "Backup work"
-        command: "rsync -av ~/clients/ ~/backups/clients-$(date +%Y%m%d)/"
+        command: "git add -A && git commit -m 'End of day backup'"
         optional: true
 ```
 
@@ -216,66 +230,33 @@ rituals:
           background: true
 ```
 
-### Remote Work Setup
+### Interactive Development Environment
+
+Use tmux templates for multi-pane development setups:
 
 ```yaml
-settings:
-  work_hours: 8.0
-  focus:
-    dnd_on_start: true
-    block_websites:
-      - "facebook.com"
-      - "twitter.com"
-      - "reddit.com"
-
 rituals:
   start:
     global:
-      - name: "Set Slack status"
-        command: "slack-cli status '🔨 Deep work mode'"
-      - name: "Block distractions"
-        command: "sudo dscacheutil -flushcache"
-      - name: "Start focus music"
-        command: "open -a Spotify"
+      - name: "Setup dev environment"
+        command: "echo 'Starting development environment...'"
+        interactive: true
+        tmux_template: "fullstack-dev"
 
-  break:
-    global:
-      - name: "Stretch reminder"
-        command: "osascript -e 'display notification \"Time to stretch\!\" with title \"Break Time\"'"
-
-  stop:
-    global:
-      - name: "Clear Slack status"
-        command: "slack-cli status ''"
-      - name: "End of day summary"
-        command: "rune report --today"
-```
-
-### Open Source Contributor
-
-```yaml
-projects:
-  - name: "oss-project-a"
-    detect: ["git-remote:github.com/owner/repo-a"]
-
-  - name: "oss-project-b"
-    detect: ["git-remote:github.com/owner/repo-b"]
-
-rituals:
-  start:
-    global:
-      - name: "Check issues"
-        command: "gh issue list --repo {{git_remote}}"
-      - name: "Pull latest"
-        command: "git pull upstream main"
-
-  stop:
-    global:
-      - name: "Check if ready for PR"
-        command: "git status --porcelain"
-      - name: "Run tests"
-        command: "npm test"
-        optional: true
+  templates:
+    fullstack-dev:
+      session_name: "dev-{{.Project}}"
+      windows:
+        - name: "editor"
+          layout: "main-horizontal"
+          panes:
+            - "vim ."
+            - "git status"
+        - name: "servers"
+          layout: "tiled"
+          panes:
+            - "npm run dev"
+            - "go run main.go"
 ```
 
 ## Integration Examples
@@ -284,19 +265,19 @@ rituals:
   <div class="feature-card">
     <span class="emoji">💬</span>
     <h4>Slack Integration</h4>
-    <p>Automatically update your Slack status and send notifications when starting/stopping work.</p>
+    <p>Automatically enable Do Not Disturb on Slack when starting work.</p>
   </div>
 
   <div class="feature-card">
     <span class="emoji">📅</span>
     <h4>Calendar Integration</h4>
-    <p>Block focus time and detect meetings automatically with Google Calendar integration.</p>
+    <p>Block focus time on Google Calendar during work sessions.</p>
   </div>
 
   <div class="feature-card">
     <span class="emoji">🔀</span>
     <h4>Git Automation</h4>
-    <p>Automate branch creation, commits, and status checking with intelligent Git workflows.</p>
+    <p>Automate commits, pulls, and status checking with Git rituals.</p>
   </div>
 </div>
 
@@ -305,19 +286,8 @@ rituals:
 ```yaml
 integrations:
   slack:
-    enabled: true
     workspace: "myteam"
     dnd_on_start: true
-    status_on_start: "🔨 Working on {{project}}"
-    status_on_break: "☕ Taking a break"
-    status_on_stop: ""
-
-rituals:
-  start:
-    global:
-      - name: "Notify team"
-        command: "slack-cli post '#dev' 'Starting work on {{project}}'"
-        optional: true
 ```
 
 ### Calendar Integration
@@ -325,101 +295,30 @@ rituals:
 ```yaml
 integrations:
   calendar:
-    enabled: true
     provider: "google"
     block_calendar: true
-    meeting_detection: true
-
-rituals:
-  start:
-    global:
-      - name: "Block focus time"
-        command: "gcal-cli create 'Deep Work - {{project}}' --duration 4h"
-        optional: true
 ```
 
-### Git Automation
+### Git Automation via Rituals
 
 ```yaml
 integrations:
   git:
     enabled: true
     auto_detect_project: true
-    branch_in_status: true
 
 rituals:
   start:
     global:
-      - name: "Create feature branch"
-        command: "git checkout -b feature/daily-work-$(date +%Y%m%d)"
+      - name: "Pull latest changes"
+        command: "git pull"
         optional: true
-        when: ["git_clean"]
 
   stop:
     global:
       - name: "Auto-commit progress"
-        command: "git add -A && git commit -m 'Daily progress: $(date)'"
+        command: "git add -A && git commit -m 'Daily progress'"
         optional: true
-        when: ["git_dirty"]
-```
-
-## Ritual Patterns
-
-### Development Environment Setup
-
-```yaml
-rituals:
-  start:
-    global:
-      - name: "Check system resources"
-        command: "df -h && free -h"
-      - name: "Start Docker"
-        command: "docker-compose up -d database cache"
-      - name: "Update packages"
-        command: "npm outdated"
-        optional: true
-      - name: "Start development tools"
-        command: "code . && open -a Terminal"
-```
-
-### End of Day Cleanup
-
-```yaml
-rituals:
-  stop:
-    global:
-      - name: "Save session"
-        command: "tmux capture-session -p > ~/logs/session-$(date +%Y%m%d).log"
-        optional: true
-      - name: "Backup important files"
-        command: "rsync -av ~/important/ ~/backups/"
-        optional: true
-      - name: "Clean temporary files"
-        command: "rm -rf /tmp/dev-*"
-        optional: true
-      - name: "Generate daily summary"
-        command: "rune report --today --format json > ~/reports/$(date +%Y%m%d).json"
-```
-
-### Break Automation
-
-```yaml
-rituals:
-  break:
-    global:
-      - name: "Lock screen"
-        command: "osascript -e 'tell application \"System Events\" to keystroke \"q\" using {control down, command down}'"
-      - name: "Pause music"
-        command: "osascript -e 'tell application \"Spotify\" to pause'"
-        optional: true
-
-  resume:
-    global:
-      - name: "Resume music"
-        command: "osascript -e 'tell application \"Spotify\" to play'"
-        optional: true
-      - name: "Check notifications"
-        command: "echo 'Welcome back\! Checking for important updates...'"
 ```
 
 ## Platform-Specific Examples
@@ -428,7 +327,7 @@ rituals:
   <div class="feature-card">
     <span class="emoji">🍎</span>
     <h4>macOS Integration</h4>
-    <p>Leverage Shortcuts, Do Not Disturb, and system APIs for seamless macOS workflow integration.</p>
+    <p>Leverage Shortcuts and Do Not Disturb for seamless macOS workflow integration.</p>
   </div>
 
   <div class="feature-card">
@@ -446,49 +345,44 @@ rituals:
 
 ### macOS Configuration
 
-```yaml
-rituals:
-  start:
-    global:
-      - name: "Enable Do Not Disturb"
-        command: "shortcuts run 'Enable DND'"
-      - name: "Set desktop wallpaper"
-        command: 'osascript -e ''tell application "System Events" to set picture of every desktop to "/path/to/work-wallpaper.jpg"'''
-
-  stop:
-    global:
-      - name: "Disable Do Not Disturb"
-        command: "shortcuts run 'Disable DND'"
-```
+Rune automatically manages Focus mode on macOS via the Shortcuts app. DND is enabled on `rune start` and disabled on `rune stop` when shortcuts are configured.
 
 ### Linux
 
-```yaml
-rituals:
-  start:
-    global:
-      - name: "Set work profile"
-        command: "gsettings set org.gnome.desktop.background picture-uri file:///home/user/wallpapers/work.jpg"
-      - name: "Enable focus mode"
-        command: "dunstctl set-paused true"
-
-  stop:
-    global:
-      - name: "Disable focus mode"
-        command: "dunstctl set-paused false"
-```
+On Linux, Rune uses `notify-send` for notifications and `dunstctl` or `makoctl` for DND control. Run `rune debug notifications` to check your setup.
 
 ### Windows
 
+On Windows, Rune uses PowerShell for notifications and Focus Assist for DND management. Run `rune debug notifications` to verify your configuration.
+
+## End of Day Cleanup
+
 ```yaml
 rituals:
-  start:
-    global:
-      - name: "Set focus assist"
-        command: 'powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait(''^{F1}'')}"'
-
   stop:
     global:
-      - name: "Disable focus assist"
-        command: 'powershell -Command "& {Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait(''^{F1}'')}"'
+      - name: "Commit work in progress"
+        command: "git add -A && git commit -m 'WIP: End of session'"
+        optional: true
+      - name: "Push changes"
+        command: "git push"
+        optional: true
+      - name: "Generate daily summary"
+        command: "rune report --today --format json"
+        optional: true
 ```
+
+## More Examples
+
+See the `examples/` directory in the repository for additional configurations:
+
+- `config-basic.yaml` - Minimal setup for new users
+- `config-developer.yaml` - Advanced developer with tmux templates
+- `config-devops.yaml` - DevOps/SRE workflows
+- `config-remote-work.yaml` - Remote work boundaries
+- `config-freelancer.yaml` - Client billing and time tracking
+- `config-academic.yaml` - Research and academic workflows
+- `config-creative.yaml` - Creative professional workflows
+- `config-content-creator.yaml` - Content creation workflows
+- `config-team-lead.yaml` - Engineering management
+- `config-telemetry.yaml` - Telemetry integration setup

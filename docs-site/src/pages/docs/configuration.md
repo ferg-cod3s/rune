@@ -4,7 +4,7 @@ title: "Configuration Guide - Rune CLI | YAML Setup & Customization"
 description: "Complete configuration guide for Rune CLI. Learn how to set up YAML config files, configure projects, rituals, integrations, focus mode, and customize your developer workflow automation."
 image: "/og-configuration.png"
 category: "Configuration"
-lastModified: "2024-07-23T00:00:00Z"
+lastModified: "2025-03-04T00:00:00Z"
 ---
 
 # Configuration Guide
@@ -19,7 +19,13 @@ settings:
   work_hours: 8.0
   break_interval: 50m
   idle_threshold: 10m
-  timezone: "America/New_York"
+  notifications:
+    enabled: true
+    break_reminders: true
+    end_of_day_reminders: true
+    session_complete: true
+    idle_detection: true
+    sound: true
 
 projects:
   - name: "main-app"
@@ -36,10 +42,22 @@ rituals:
 integrations:
   git:
     enabled: true
+    auto_detect_project: true
   slack:
-    enabled: false
+    workspace: "myteam"
+    dnd_on_start: true
+  calendar:
+    provider: "google"
+    block_calendar: true
   telemetry:
-    enabled: true
+    enabled: false
+    sentry_dsn: ""
+
+logging:
+  level: "info"
+  format: "json"
+  output: "stdout"
+  error_file: ""
 ```
 
 ## Settings Section
@@ -48,12 +66,9 @@ integrations:
 
 ```yaml
 settings:
-  work_hours: 8.0 # Target work hours per day
-  break_interval: 50m # Suggested break interval
-  idle_threshold: 10m # Idle time before auto-pause
-  timezone: "America/New_York" # Your timezone
-  auto_start: false # Auto-start on first command
-  auto_stop: true # Auto-stop at day end
+  work_hours: 8.0        # Target work hours per day (0-24)
+  break_interval: 50m    # Suggested break interval
+  idle_threshold: 10m    # Idle time before auto-pause
 ```
 
 ### Notification Settings
@@ -61,21 +76,12 @@ settings:
 ```yaml
 settings:
   notifications:
-    enabled: true
-    break_reminders: true
-    session_alerts: true
-    sound: true
-```
-
-### Focus Settings
-
-```yaml
-settings:
-  focus:
-    dnd_on_start: true # Enable Do Not Disturb on start
-    dnd_on_break: false # Keep DND during breaks
-    block_websites: [] # Websites to block during work
-    allow_emergency: true # Allow emergency interruptions
+    enabled: true              # Enable OS-level notifications
+    break_reminders: true      # Remind to take breaks
+    end_of_day_reminders: true # Remind when approaching target hours
+    session_complete: true     # Notify when session ends
+    idle_detection: true       # Notify when idle detected
+    sound: true                # Enable notification sounds
 ```
 
 ## Projects Section
@@ -88,44 +94,23 @@ Projects define how Rune detects and categorizes your work.
 projects:
   - name: "web-app"
     detect:
-      - "git:web-app" # Git repository name
-      - "dir:~/projects/web-app" # Directory path
-      - "git-remote:github.com/me/app" # Git remote URL
-    description: "Main web application"
-    tags: ["frontend", "react"]
+      - "git:web-app"              # Git repository name
+      - "dir:~/projects/web-app"   # Directory path
 
   - name: "api-service"
     detect:
       - "git:api-service"
       - "dir:~/work/api"
-    description: "Backend API service"
-    tags: ["backend", "go"]
 ```
 
-### Detection Methods
+### Detection Patterns
 
 - `git:name` - Match Git repository name
 - `dir:path` - Match directory path (supports `~` expansion)
-- `git-remote:url` - Match Git remote URL pattern
-- `env:VAR=value` - Match environment variable
-
-### Project Metadata
-
-```yaml
-projects:
-  - name: "project-name"
-    detect: ["git:project"]
-    description: "Project description"
-    tags: ["tag1", "tag2"]
-    client: "Client Name"
-    rate: 150.00 # Hourly rate for reporting
-    budget: 40.0 # Hour budget
-    deadline: "2024-12-31" # Project deadline
-```
 
 ## Rituals Section
 
-Rituals are automated command sequences that run during start/stop/break events.
+Rituals are automated command sequences that run during start/stop events.
 
 ### Basic Ritual Structure
 
@@ -136,12 +121,11 @@ rituals:
       - name: "Update repositories"
         command: "git -C ~/projects pull --all"
         optional: false
-        timeout: 30s
 
     per_project:
       web-app:
         - name: "Start dev server"
-          command: "cd ~/projects/web-app && npm run dev"
+          command: "bun run dev"
           background: true
 
   stop:
@@ -154,42 +138,52 @@ rituals:
 ### Ritual Command Options
 
 ```yaml
-- name: "Command description"
-  command: "shell command to execute"
-  optional: true # Don't fail ritual if command fails
-  background: false # Run in background
-  timeout: 30s # Command timeout
-  working_dir: "~/projects" # Working directory
-  env: # Environment variables
-    NODE_ENV: "development"
-  when: # Conditional execution
-    - "git_clean" # Only if git is clean
-    - "weekday" # Only on weekdays
-    - "time_after:09:00" # Only after 9 AM
+- name: "Command description"    # Display name for the command
+  command: "shell command"        # Shell command to execute
+  optional: true                  # Don't fail ritual if command fails (default: false)
+  background: false               # Run in background (default: false)
+  interactive: false              # Enable interactive mode with TTY (default: false)
+  tmux_session: "session-name"   # Custom tmux session name (optional)
+  tmux_template: "template-name" # Reference to a tmux template (optional)
 ```
 
-### Conditional Execution
+### Interactive Commands & tmux Templates
 
-Available conditions:
-
-- `git_clean` - Git working directory is clean
-- `git_dirty` - Git working directory has changes
-- `weekday` - Monday through Friday
-- `weekend` - Saturday and Sunday
-- `time_after:HH:MM` - After specific time
-- `time_before:HH:MM` - Before specific time
-- `env:VAR=value` - Environment variable matches
-
-### Ritual Types
+Commands with `interactive: true` can create tmux sessions for development environments:
 
 ```yaml
 rituals:
-  start: # Run when starting work
-  stop: # Run when stopping work
-  break: # Run when taking breaks
-  resume: # Run when resuming from break
-  daily: # Run once per day
-  weekly: # Run once per week
+  start:
+    global:
+      - name: "Setup Development Environment"
+        command: "echo 'Starting dev environment...'"
+        interactive: true
+        tmux_template: "fullstack-dev"
+
+  templates:
+    fullstack-dev:
+      session_name: "dev-{{.Project}}"
+      windows:
+        - name: "editor"
+          layout: "main-horizontal"
+          panes:
+            - "vim ."
+            - "git status"
+        - name: "servers"
+          layout: "tiled"
+          panes:
+            - "npm run dev"
+            - "go run main.go"
+```
+
+### Ritual Types
+
+Rune supports two ritual types:
+
+```yaml
+rituals:
+  start:  # Run when starting work (via `rune start`)
+  stop:   # Run when stopping work (via `rune stop`)
 ```
 
 ## Integrations Section
@@ -199,11 +193,8 @@ rituals:
 ```yaml
 integrations:
   git:
-    enabled: true
-    auto_detect_project: true # Auto-detect project from Git
-    commit_on_stop: false # Auto-commit on stop
-    push_on_stop: false # Auto-push on stop
-    branch_in_status: true # Show branch in status
+    enabled: true               # Enable Git integration
+    auto_detect_project: true   # Auto-detect project from Git repo
 ```
 
 ### Slack Integration
@@ -211,13 +202,8 @@ integrations:
 ```yaml
 integrations:
   slack:
-    enabled: true
-    workspace: "myteam"
-    token: "xoxp-your-token" # Use environment variable instead
-    dnd_on_start: true
-    status_on_start: "🔨 Working on {{project}}"
-    status_on_break: "☕ On break"
-    status_on_stop: ""
+    workspace: "myteam"       # Slack workspace name
+    dnd_on_start: true         # Enable DND on Slack when starting work
 ```
 
 ### Calendar Integration
@@ -225,11 +211,8 @@ integrations:
 ```yaml
 integrations:
   calendar:
-    enabled: true
-    provider: "google" # google, outlook, caldav
-    block_calendar: true # Block time on calendar
-    meeting_detection: true # Detect meetings for auto-pause
-    credentials_file: "~/.rune/calendar-creds.json"
+    provider: "google"         # Calendar provider (google)
+    block_calendar: true       # Block time on calendar during work
 ```
 
 ### Telemetry Settings
@@ -237,12 +220,18 @@ integrations:
 ```yaml
 integrations:
   telemetry:
-    enabled: true
-    otlp_endpoint: "" # Set via environment (RUNE_OTLP_ENDPOINT)
-    sentry_dsn: "" # Set via environment
-    collect_errors: true
-    collect_usage: true
-    collect_performance: false
+    enabled: false             # Enable telemetry (opt-in)
+    sentry_dsn: ""             # Sentry DSN (prefer RUNE_SENTRY_DSN env var)
+```
+
+## Logging Section
+
+```yaml
+logging:
+  level: "info"       # Log level: debug, info, warn, error
+  format: "json"      # Log format: text, json
+  output: "stdout"    # Output: stdout, stderr, or file path
+  error_file: ""      # JSON file for structured error logging
 ```
 
 ## Environment Variables
@@ -251,85 +240,15 @@ Sensitive values should be set via environment variables:
 
 ```bash
 # Telemetry
+export RUNE_SENTRY_DSN="https://key@sentry.io/project_id"
 export RUNE_OTLP_ENDPOINT="http://localhost:4318/v1/logs"
-export RUNE_SENTRY_DSN="your-dsn"
-
-# Integrations
-export RUNE_SLACK_TOKEN="xoxp-your-token"
-export RUNE_CALENDAR_CREDENTIALS="path/to/creds.json"
 
 # General
-export RUNE_CONFIG_FILE="~/.rune/config.yaml"
-export RUNE_TELEMETRY_DISABLED="true"
-export RUNE_DEBUG="true"
+export RUNE_TELEMETRY_DISABLED="true"  # Disable all telemetry
+export RUNE_DEBUG="true"               # Enable debug logging
 ```
 
-## Configuration Templates
-
-### Developer Template
-
-```yaml
-version: 1
-settings:
-  work_hours: 8.0
-  break_interval: 50m
-  idle_threshold: 15m
-
-projects:
-  - name: "current-project"
-    detect: ["git:{{git_repo_name}}"]
-
-rituals:
-  start:
-    global:
-      - name: "Update dependencies"
-        command: "git pull && npm install"
-      - name: "Start services"
-        command: "docker-compose up -d"
-        optional: true
-
-  stop:
-    global:
-      - name: "Commit WIP"
-        command: "git add -A && git commit -m 'WIP: $(date)'"
-        optional: true
-
-integrations:
-  git:
-    enabled: true
-    auto_detect_project: true
-```
-
-### Freelancer Template
-
-```yaml
-version: 1
-settings:
-  work_hours: 6.0
-  break_interval: 45m
-
-projects:
-  - name: "client-a"
-    detect: ["dir:~/clients/client-a"]
-    client: "Client A"
-    rate: 150.00
-
-  - name: "client-b"
-    detect: ["dir:~/clients/client-b"]
-    client: "Client B"
-    rate: 175.00
-
-rituals:
-  start:
-    global:
-      - name: "Time tracking reminder"
-        command: "echo 'Remember to track time accurately'"
-
-  stop:
-    global:
-      - name: "Generate invoice data"
-        command: "rune report --today --format csv >> ~/invoices/$(date +%Y-%m).csv"
-```
+Environment variables override config file values.
 
 ## Validation
 
@@ -341,30 +260,33 @@ rune config validate
 
 Common validation errors:
 
-- Invalid `YAML` syntax
-- Unknown configuration keys
-- Invalid duration formats
-- Missing required fields
-- Invalid regex patterns
+- Invalid YAML syntax
+- Unsupported config version (must be `1`)
+- `work_hours` outside 0-24 range
+- Negative `break_interval` or `idle_threshold`
+- Empty project names or detection patterns
+- References to undefined tmux templates
 
 ## Migration
 
-### From `Watson`
+### From Watson
 
 ```bash
-rune config migrate --from watson --backup
+rune migrate watson ~/.config/watson/frames
+rune migrate watson ~/.config/watson/frames --dry-run
 ```
 
-### From `Timewarrior`
+### From Timewarrior
 
 ```bash
-rune config migrate --from timewarrior --backup
+rune migrate timewarrior ~/.timewarrior
+rune migrate timewarrior ~/.timewarrior --dry-run
 ```
 
 ## Best Practices
 
 1. **Version Control**: Keep your config in a dotfiles repository
-2. **Environment Variables**: Use env vars for sensitive data
-3. **Backup**: Regularly backup your configuration
-4. **Testing**: Test rituals with `--dry-run` flag
-5. **Documentation**: Document custom rituals and integrations
+2. **Environment Variables**: Use env vars for sensitive data (API keys, DSNs)
+3. **Optional Commands**: Mark commands that may fail as `optional: true`
+4. **Background Processes**: Use `background: true` for long-running dev servers
+5. **Testing**: Test rituals with `rune ritual test start` before using `rune start`

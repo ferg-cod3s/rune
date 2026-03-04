@@ -229,8 +229,8 @@ export GITHUB_TOKEN="ghp_your-token-here"
 rune config validate
 
 # Test specific rituals
-rune ritual test start --project myproject
-rune ritual test stop --project myproject
+rune ritual test start
+rune ritual test stop myproject
 
 # Check project detection
 rune status  # Shows detected project

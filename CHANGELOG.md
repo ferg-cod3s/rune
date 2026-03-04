@@ -144,12 +144,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Development Milestones
 
 ### Phase 1: Core MVP (Months 1-3)
-- [ ] Basic time tracking with start/stop/pause
-- [ ] YAML configuration with validation
-- [ ] Simple ritual execution
-- [ ] Cross-platform DND automation
-- [ ] Basic reporting (daily/weekly)
-- [ ] Shell completions
+- [x] Basic time tracking with start/stop/pause
+- [x] YAML configuration with validation
+- [x] Simple ritual execution
+- [x] Cross-platform DND automation
+- [x] Basic reporting (daily/weekly)
+- [x] Shell completions
 
 ### Phase 2: Integration & Intelligence (Months 4-6)
 - [ ] Git hooks for automatic project detection
