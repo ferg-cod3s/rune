@@ -65,8 +65,17 @@ func formatRelativeTime(t time.Time) string {
 		return fmt.Sprintf("%d days ago", days)
 	}
 
-	// Less than 30 days ago - show weeks
-	if diff < 30*24*time.Hour {
+	// Use calendar-based month calculation to handle variable month lengths
+	months := calendarMonthsBetween(t, now)
+	if months > 0 && months < 12 {
+		if months == 1 {
+			return "1 month ago"
+		}
+		return fmt.Sprintf("%d months ago", months)
+	}
+
+	// Between 7 days and 1 month - show weeks
+	if months == 0 {
 		weeks := int(diff.Hours() / (24 * 7))
 		if weeks == 1 {
 			return "1 week ago"
@@ -74,19 +83,38 @@ func formatRelativeTime(t time.Time) string {
 		return fmt.Sprintf("%d weeks ago", weeks)
 	}
 
-	// Less than 365 days ago - show months
-	if diff < 365*24*time.Hour {
-		months := int(diff.Hours() / (24 * 30))
-		if months == 1 {
-			return "1 month ago"
-		}
-		return fmt.Sprintf("%d months ago", months)
-	}
-
 	// More than a year ago - show years
-	years := int(diff.Hours() / (24 * 365))
-	if years == 1 {
+	years := calendarYearsBetween(t, now)
+	if years <= 1 {
 		return "1 year ago"
 	}
 	return fmt.Sprintf("%d years ago", years)
+}
+
+// calendarMonthsBetween returns the number of whole calendar months between two times.
+func calendarMonthsBetween(from, to time.Time) int {
+	years := to.Year() - from.Year()
+	months := int(to.Month()) - int(from.Month())
+	total := years*12 + months
+	// Adjust if the day hasn't been reached yet in the current month
+	if to.Day() < from.Day() {
+		total--
+	}
+	if total < 0 {
+		return 0
+	}
+	return total
+}
+
+// calendarYearsBetween returns the number of whole calendar years between two times.
+func calendarYearsBetween(from, to time.Time) int {
+	years := to.Year() - from.Year()
+	// Use month/day comparison to handle leap years correctly
+	if to.Month() < from.Month() || (to.Month() == from.Month() && to.Day() < from.Day()) {
+		years--
+	}
+	if years < 0 {
+		return 0
+	}
+	return years
 }

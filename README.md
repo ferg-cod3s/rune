@@ -10,7 +10,7 @@
 
 **Ancient wisdom for modern workflows**
 
-> ⚠️ **Alpha Release**: Rune is currently in alpha development. Features may change, and some functionality is still being implemented. Use with caution in production environments.
+> **Beta Release**: Rune is actively developed and all core features are functional. Configuration formats are stable. We welcome feedback and contributions.
 
 Rune is a developer-first CLI productivity platform that automates daily work rituals, enforces healthy work-life boundaries, and integrates seamlessly with existing developer workflows.
 
@@ -151,20 +151,35 @@ integrations:
 - `rune resume` - Resume paused timer
 - `rune status` - Show current session status
 - `rune stop` - End workday and run stop rituals
-- `rune report` - Generate time reports
+- `rune report` - Generate time reports (supports `--today`, `--week`, `--month`, `--format csv|json`)
 - `rune update` - Update rune to the latest version
+- `rune logs` - View application logs with filtering
 
 ### Configuration Commands
 
 - `rune config edit` - Edit configuration file
 - `rune config validate` - Validate configuration
-- `rune config migrate` - Migrate from Watson/Timewarrior
+- `rune config show` - Display current configuration
+- `rune config setup-telemetry` - Configure telemetry integration
+
+### Data Migration
+
+- `rune migrate watson <file>` - Import from Watson time tracker
+- `rune migrate timewarrior <dir>` - Import from Timewarrior
 
 ### Ritual Commands
 
 - `rune ritual list` - List available rituals
-- `rune ritual run <name>` - Run specific ritual
-- `rune ritual test <name>` - Test ritual without execution
+- `rune ritual run <start|stop>` - Run specific ritual
+- `rune ritual test <start|stop>` - Test ritual without execution
+
+### Debugging & Testing
+
+- `rune debug telemetry` - Debug telemetry connectivity
+- `rune debug notifications` - Debug OS notification setup
+- `rune test notifications` - Test notification system
+- `rune test dnd` - Test Do Not Disturb functionality
+- `rune test logging` - Test structured logging
 
 ## Examples
 
