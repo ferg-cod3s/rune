@@ -8,6 +8,13 @@ import (
 	"net/http"
 )
 
+// copilotBaseURL and copilotHTTPClient are package-level variables to allow
+// overriding in tests.
+var (
+	copilotBaseURL    = "https://api.githubcopilot.com"
+	copilotHTTPClient = http.DefaultClient
+)
+
 // CopilotRequest is the payload for the Copilot LLM API
 // (This is a minimal example; expand as needed)
 type CopilotRequest struct {
@@ -25,7 +32,7 @@ type CopilotResponse struct {
 // CallCopilotLLM calls the Copilot LLM API with the given prompt and token.
 // The model selection is handled by Copilot; there is no model parameter.
 func CallCopilotLLM(prompt, token string) (string, error) {
-	url := "https://api.githubcopilot.com/chat/completions"
+	url := copilotBaseURL + "/chat/completions"
 	payload := CopilotRequest{
 		Messages: []map[string]string{{
 			"role":    "user",
@@ -44,7 +51,7 @@ func CallCopilotLLM(prompt, token string) (string, error) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := copilotHTTPClient.Do(req)
 	if err != nil {
 		return "", err
 	}

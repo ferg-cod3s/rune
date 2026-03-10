@@ -54,6 +54,9 @@ func TestCallCopilotLLM_Success(t *testing.T) {
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			t.Errorf("failed to decode request body: %v", err)
 		}
+		if len(req.Messages) != 1 || req.Messages[0]["content"] != "hello" {
+			t.Errorf("unexpected request body: %+v", req)
+		}
 
 		// Return a successful response
 		resp := CopilotResponse{
@@ -74,9 +77,23 @@ func TestCallCopilotLLM_Success(t *testing.T) {
 	}))
 	defer server.Close()
 
-	// We can't easily test the real API, but we can test request/response serialization
-	// The actual URL is hardcoded in CallCopilotLLM, so this test validates the types
-	t.Log("CallCopilotLLM types validated through mock server setup")
+	// Override package-level variables to use the mock server
+	origBase := copilotBaseURL
+	origClient := copilotHTTPClient
+	copilotBaseURL = server.URL
+	copilotHTTPClient = server.Client()
+	defer func() {
+		copilotBaseURL = origBase
+		copilotHTTPClient = origClient
+	}()
+
+	result, err := CallCopilotLLM("hello", "test-token")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result != "Hello from Copilot!" {
+		t.Errorf("expected 'Hello from Copilot!', got %q", result)
+	}
 }
 
 func TestCallCopilotLLM_EmptyChoices(t *testing.T) {
@@ -88,10 +105,22 @@ func TestCallCopilotLLM_EmptyChoices(t *testing.T) {
 	}))
 	defer server.Close()
 
-	// Validate that empty choices would produce the expected error message
-	resp := CopilotResponse{Choices: nil}
-	if len(resp.Choices) != 0 {
-		t.Errorf("expected 0 choices, got %d", len(resp.Choices))
+	// Override package-level variables to use the mock server
+	origBase := copilotBaseURL
+	origClient := copilotHTTPClient
+	copilotBaseURL = server.URL
+	copilotHTTPClient = server.Client()
+	defer func() {
+		copilotBaseURL = origBase
+		copilotHTTPClient = origClient
+	}()
+
+	_, err := CallCopilotLLM("hello", "test-token")
+	if err == nil {
+		t.Fatal("expected error for empty choices, got nil")
+	}
+	if err.Error() != "No choices returned from Copilot" {
+		t.Errorf("expected 'No choices returned from Copilot', got %q", err.Error())
 	}
 }
 
