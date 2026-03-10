@@ -3,10 +3,14 @@ package copilot
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 )
+
+// ErrNoChoices is returned by CallCopilotLLM when the API response contains no choices.
+var ErrNoChoices = errors.New("no choices returned from Copilot")
 
 // copilotBaseURL and copilotHTTPClient are package-level variables to allow
 // overriding in tests.
@@ -67,7 +71,7 @@ func CallCopilotLLM(prompt, token string) (string, error) {
 		return "", err
 	}
 	if len(copilotResp.Choices) == 0 {
-		return "", fmt.Errorf("No choices returned from Copilot")
+		return "", ErrNoChoices
 	}
 	return copilotResp.Choices[0].Message.Content, nil
 }
