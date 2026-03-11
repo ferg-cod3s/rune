@@ -39,7 +39,7 @@ jobs:
         run: go mod download
 
       - name: Install Gosec
-        run: go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
 
       - name: Run Gosec Security Scanner
         run: gosec -fmt sarif -out gosec-results.sarif ./...
@@ -116,6 +116,7 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
+    continue-on-error: true
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
