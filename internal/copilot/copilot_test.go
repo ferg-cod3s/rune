@@ -2,6 +2,7 @@ package copilot
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -38,9 +39,12 @@ func TestCopilotRequest_Marshal(t *testing.T) {
 func TestCallCopilotLLM_Success(t *testing.T) {
 	// Create a mock server that returns a successful response
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Verify request
+		// Verify request method, path, and headers
 		if r.Method != http.MethodPost {
 			t.Errorf("expected POST, got %s", r.Method)
+		}
+		if r.URL.Path != "/chat/completions" {
+			t.Errorf("expected path '/chat/completions', got %q", r.URL.Path)
 		}
 		if r.Header.Get("Content-Type") != "application/json" {
 			t.Errorf("expected Content-Type application/json, got %s", r.Header.Get("Content-Type"))
@@ -53,6 +57,9 @@ func TestCallCopilotLLM_Success(t *testing.T) {
 		var req CopilotRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			t.Errorf("failed to decode request body: %v", err)
+		}
+		if len(req.Messages) != 1 || req.Messages[0]["content"] != "hello" {
+			t.Errorf("unexpected request body: %+v", req)
 		}
 
 		// Return a successful response
@@ -70,13 +77,29 @@ func TestCallCopilotLLM_Success(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			t.Errorf("failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
-	// We can't easily test the real API, but we can test request/response serialization
-	// The actual URL is hardcoded in CallCopilotLLM, so this test validates the types
-	t.Log("CallCopilotLLM types validated through mock server setup")
+	// Override package-level variables to use the mock server
+	origBase := copilotBaseURL
+	origClient := copilotHTTPClient
+	copilotBaseURL = server.URL
+	copilotHTTPClient = server.Client()
+	defer func() {
+		copilotBaseURL = origBase
+		copilotHTTPClient = origClient
+	}()
+
+	result, err := CallCopilotLLM("hello", "test-token")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result != "Hello from Copilot!" {
+		t.Errorf("expected 'Hello from Copilot!', got %q", result)
+	}
 }
 
 func TestCallCopilotLLM_EmptyChoices(t *testing.T) {
@@ -84,14 +107,28 @@ func TestCallCopilotLLM_EmptyChoices(t *testing.T) {
 		resp := CopilotResponse{Choices: nil}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(resp)
+		if err := json.NewEncoder(w).Encode(resp); err != nil {
+			t.Errorf("failed to encode response: %v", err)
+		}
 	}))
 	defer server.Close()
 
-	// Validate that empty choices would produce the expected error message
-	resp := CopilotResponse{Choices: nil}
-	if len(resp.Choices) != 0 {
-		t.Errorf("expected 0 choices, got %d", len(resp.Choices))
+	// Override package-level variables to use the mock server
+	origBase := copilotBaseURL
+	origClient := copilotHTTPClient
+	copilotBaseURL = server.URL
+	copilotHTTPClient = server.Client()
+	defer func() {
+		copilotBaseURL = origBase
+		copilotHTTPClient = origClient
+	}()
+
+	_, err := CallCopilotLLM("hello", "test-token")
+	if err == nil {
+		t.Fatal("expected error for empty choices, got nil")
+	}
+	if !errors.Is(err, ErrNoChoices) {
+		t.Errorf("expected ErrNoChoices, got %v", err)
 	}
 }
 

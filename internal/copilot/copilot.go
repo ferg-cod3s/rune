@@ -3,9 +3,20 @@ package copilot
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
+)
+
+// ErrNoChoices is returned by CallCopilotLLM when the API response contains no choices.
+var ErrNoChoices = errors.New("no choices returned from Copilot")
+
+// copilotBaseURL and copilotHTTPClient are package-level variables to allow
+// overriding in tests.
+var (
+	copilotBaseURL    = "https://api.githubcopilot.com"
+	copilotHTTPClient = http.DefaultClient
 )
 
 // CopilotRequest is the payload for the Copilot LLM API
@@ -25,7 +36,7 @@ type CopilotResponse struct {
 // CallCopilotLLM calls the Copilot LLM API with the given prompt and token.
 // The model selection is handled by Copilot; there is no model parameter.
 func CallCopilotLLM(prompt, token string) (string, error) {
-	url := "https://api.githubcopilot.com/chat/completions"
+	url := copilotBaseURL + "/chat/completions"
 	payload := CopilotRequest{
 		Messages: []map[string]string{{
 			"role":    "user",
@@ -44,7 +55,7 @@ func CallCopilotLLM(prompt, token string) (string, error) {
 	req.Header.Set("Authorization", "Bearer "+token)
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := copilotHTTPClient.Do(req)
 	if err != nil {
 		return "", err
 	}
@@ -60,7 +71,7 @@ func CallCopilotLLM(prompt, token string) (string, error) {
 		return "", err
 	}
 	if len(copilotResp.Choices) == 0 {
-		return "", fmt.Errorf("No choices returned from Copilot")
+		return "", ErrNoChoices
 	}
 	return copilotResp.Choices[0].Message.Content, nil
 }
