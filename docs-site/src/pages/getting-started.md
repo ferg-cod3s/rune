@@ -7,7 +7,7 @@ category: "Getting Started"
 lastModified: "2024-07-23T00:00:00Z"
 ---
 
-> **🚀 Beta Status**: You're installing v0.2.0-beta.1 - the MVP feature-complete version. [Join the beta program](/beta) for updates and feedback channels.
+> **🚀 Beta Status**: You're installing v0.2.0-beta.7 - the MVP feature-complete version. [Join the beta program](/beta) for updates and feedback channels.
 
 ## Installation
 
@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | b
     <h4>📦 Manual Installation</h4>
     <p>Download and install manually</p>
     <ol>
-      <li>Download from <a href="https://github.com/ferg-cod3s/rune/releases/tag/v0.2.0-beta.1">GitHub Releases</a></li>
+      <li>Download from <a href="https://github.com/ferg-cod3s/rune/releases/tag/v0.2.0-beta.7">GitHub Releases</a></li>
       <li>Extract binary and move to your <code>PATH</code></li>
       <li>Make executable: <code>chmod +x rune</code></li>
     </ol>
@@ -45,7 +45,7 @@ curl -fsSL https://raw.githubusercontent.com/ferg-cod3s/rune/main/install.sh | b
 <div class="installation-cards">
   <div class="installation-card">
     <h4>🪟 Windows Installation</h4>
-    <p>Download the Windows binary from <a href="https://github.com/ferg-cod3s/rune/releases/tag/v0.2.0-beta.1">GitHub Releases</a> and add to your <code>PATH</code>.</p>
+    <p>Download the Windows binary from <a href="https://github.com/ferg-cod3s/rune/releases/tag/v0.2.0-beta.7">GitHub Releases</a> and add to your <code>PATH</code>.</p>
   </div>
 </div>
 
@@ -119,9 +119,9 @@ rune report --week</code></pre>
   </div>
 
   <div class="installation-card">
-    <h4>📅 Custom Date Range</h4>
-    <pre><code># View specific date range
-rune report --from 2024-01-01 --to 2024-01-07</code></pre>
+    <h4>📅 Monthly Reports</h4>
+    <pre><code># View this month's report
+rune report --month</code></pre>
   </div>
 </div>
 

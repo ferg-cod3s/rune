@@ -217,17 +217,21 @@ Try 'rune start' to begin your workday!
 
 ```
 cmd/
-  └── cadence/
+  └── rune/
       └── main.go          # Entry point
 internal/
-  ├── commands/            # Command implementations
-  ├── config/              # Configuration management
+  ├── commands/            # Command implementations (Cobra)
+  ├── config/              # Configuration management (Viper)
   ├── rituals/             # Ritual execution engine
-  ├── tracking/            # Time tracking logic
-  └── integrations/        # External integrations
-pkg/
-  ├── api/                 # Public API for plugins
-  └── plugins/             # Plugin system
+  ├── tracking/            # Time tracking logic (BoltDB)
+  ├── dnd/                 # Do Not Disturb manager
+  ├── notifications/       # OS-level notification support
+  ├── tmux/                # tmux session management
+  ├── colors/              # Terminal color system
+  ├── logger/              # Structured logging
+  ├── telemetry/           # Sentry telemetry integration
+  ├── otellogger/          # OpenTelemetry logger
+  └── copilot/             # AI copilot integration
 ```
 
 ### 4.3 Plugin Architecture
@@ -346,7 +350,7 @@ pkg/
 
 ```
 As a new user
-I want to run 'cadence init --guided'
+I want to run 'rune init --guided'
 So that I can quickly set up my work rituals with helpful prompts
 ```
 
@@ -354,7 +358,7 @@ So that I can quickly set up my work rituals with helpful prompts
 
 ```
 As a developer
-I want to run 'cadence start'
+I want to run 'rune start'
 So that all my development tools start automatically and my time tracking begins
 ```
 
@@ -370,7 +374,7 @@ So that my tracked time accurately reflects actual work hours
 
 ```
 As a developer finishing work
-I want to run 'cadence stop'
+I want to run 'rune stop'
 So that my work is saved, services are stopped, and I have a clear end to my day
 ```
 

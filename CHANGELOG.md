@@ -8,19 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Nothing yet
+- Build verification test for main package
+- Comprehensive unit tests for `copilot` package (request/response serialization)
+- Unit tests for `otellogger` package (initialization, disabled state, helpers)
+- Extended command-level tests (subcommand registration, masking, calendar helpers)
+- `calendarMonthsBetween` and `calendarYearsBetween` helper functions for accurate relative time
 
 ### Changed
-- Nothing yet
-
-### Deprecated
-- Nothing yet
-
-### Removed
-- Nothing yet
+- Improved `formatRelativeTime` to use calendar-based month/year calculation instead of fixed-duration thresholds, fixing edge cases around February and leap years
+- Updated README from alpha to beta status with comprehensive command reference
+- Expanded command documentation to include logs, debug, migration, and testing commands
 
 ### Fixed
-- Nothing yet
+- `formatRelativeTime` returning "4 weeks ago" instead of "1 month ago" for February dates
+- `formatRelativeTime` returning "1 year ago" instead of "2 years ago" across leap year boundaries
+- Makefile syntax error on `build-telemetry` target (concatenated echo commands)
 
 ### Security
 - Nothing yet
@@ -142,12 +144,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Development Milestones
 
 ### Phase 1: Core MVP (Months 1-3)
-- [ ] Basic time tracking with start/stop/pause
-- [ ] YAML configuration with validation
-- [ ] Simple ritual execution
-- [ ] Cross-platform DND automation
-- [ ] Basic reporting (daily/weekly)
-- [ ] Shell completions
+- [x] Basic time tracking with start/stop/pause
+- [x] YAML configuration with validation
+- [x] Simple ritual execution
+- [x] Cross-platform DND automation
+- [x] Basic reporting (daily/weekly)
+- [x] Shell completions
 
 ### Phase 2: Integration & Intelligence (Months 4-6)
 - [ ] Git hooks for automatic project detection
