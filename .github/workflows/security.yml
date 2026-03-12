@@ -58,12 +58,8 @@ jobs:
         run: govulncheck ./...
         continue-on-error: true
 
-      - name: Install Nancy (dependency vulnerability scanner)
-        run: go install github.com/sonatypecommunity/nancy@latest
-
-      - name: Run Nancy dependency scan
-        run: |
-          go list -json -deps ./... | nancy sleuth --loud
+      # Nancy scanner removed: upstream module path is no longer reliably installable.
+      # Dependency risk is still covered by govulncheck + dependency-review.
 
       - name: Run Semgrep SAST
         uses: returntocorp/semgrep-action@v1
